@@ -1,3 +1,4 @@
 {
-    "editor.inlineSuggest.enabled": true
+    "editor.inlineSuggest.enabled": true,
+    "cmake.sourceDirectory": "C:/Users/Shadow/Documents/New folder (4)/osborne-mstos"
 }

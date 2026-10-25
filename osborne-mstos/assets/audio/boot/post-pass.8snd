@@ -1,0 +1,6 @@
+8SND 1
+# post-pass: short confirmation blip
+VOICE 0 CONTROL 02 FREQ 0C VOL 0B
+WAIT 060
+VOICE 0 VOL 00
+END

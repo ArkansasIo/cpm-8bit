@@ -1,0 +1,8 @@
+8SND 1
+# post-fail: descending error tone
+VOICE 0 CONTROL 05 FREQ 18 VOL 0E
+WAIT 090
+VOICE 0 FREQ 10
+WAIT 090
+VOICE 0 VOL 00
+END

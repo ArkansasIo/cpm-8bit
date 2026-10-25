@@ -1,0 +1,8 @@
+8SND 1
+# power-on: rising two-tone power-up chirp
+VOICE 0 CONTROL 03 FREQ 08 VOL 0C
+WAIT 050
+VOICE 0 FREQ 04
+WAIT 050
+VOICE 0 VOL 00
+END

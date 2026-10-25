@@ -1,0 +1,52 @@
+# config/audio/system-sounds.toml — versioned sound manifest (authoritative)
+version = 1
+
+[theme]
+default = "retro-8bit"
+
+[limits]
+master_volume = 1.0          # never exceeded, even for priority 4
+queue_capacity = 16
+rate_limit_per_event_ms = 250
+
+[sounds."sound.boot.power_on"]
+modern = "assets/audio/boot/power-on.wav"
+retro  = "assets/audio/boot/power-on.8snd"
+volume = 0.40
+priority = 3
+
+[sounds."sound.boot.post_pass"]
+modern = "assets/audio/boot/post-pass.wav"
+retro  = "assets/audio/boot/post-pass.8snd"
+volume = 0.35
+priority = 2
+
+[sounds."sound.boot.post_fail"]
+retro  = "assets/audio/boot/post-fail.8snd"
+volume = 0.50
+priority = 4
+
+[sounds."sound.desktop.ready"]
+retro  = "assets/audio/desktop/ready.8snd"
+volume = 0.30
+priority = 2
+
+[sounds."sound.terminal.bell"]
+retro  = "assets/audio/terminal/bell.8snd"
+volume = 0.30
+priority = 1
+
+[sounds."sound.terminal.error"]
+retro  = "assets/audio/terminal/error.8snd"
+volume = 0.35
+priority = 2
+
+[sounds."sound.app.error"]
+retro  = "assets/audio/applications/error.8snd"
+volume = 0.45
+priority = 3
+
+[sounds."sound.shutdown.complete"]
+retro  = "assets/audio/shutdown/complete.8snd"
+volume = 0.35
+priority = 3
