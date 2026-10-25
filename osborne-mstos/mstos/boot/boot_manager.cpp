@@ -2,9 +2,12 @@
 #include "boot_manager.hpp"
 #include "post.hpp"
 #include "emulator/hardware.hpp"
+#include <chrono>
+#include <thread>
 
 namespace mstos::boot
 {
+    static void pause_ms(unsigned ms) { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); }
 
     static constexpr const char *kItems[] = {
         "1. Boot MSTOS 2.2",
@@ -31,13 +34,18 @@ namespace mstos::boot
         auto &disp = emulator::Machine::instance().display();
 
         int sel = 0;
+        bool need_render = true;
         while (true)
         {
-            render(sel);
+            if (need_render) { render(sel); need_render = false; }
             char c;
             bool enter, esc;
             if (!kbd.poll_key(c, enter, esc))
+            {
+                pause_ms(16); // wait quietly — no busy redraw
                 continue;
+            }
+            need_render = true;
             if (esc)
                 return BootChoice::Exit;
             if (enter)
@@ -61,6 +69,7 @@ namespace mstos::boot
                         bool e1, e2;
                         while (!kbd.poll_key(c2, e1, e2))
                         {
+                            pause_ms(16); // wait quietly
                         }
                     }
                     break;

@@ -1,5 +1,6 @@
 // src/dos_api.cpp — MS-DOS 2.2 API implementation over the 8-bit drivers
 #include "dos_api.hpp"
+#include "bus.hpp"
 
 namespace dos
 {
@@ -157,7 +158,11 @@ extern "C" void hw_irq_handler()
     // NOTE: vectors remapped to 0x20..0x2F by Pic::init
     // read the ISR-served IRQ from OCW3 register (8-bit poll)
     u8 irq = 0;
+#if defined(__GNUC__) || defined(__clang__)
     asm volatile("movb $0x0B, %%al; outb %%al, $0x20; inb $0x20, %%al" : "=a"(irq)::);
+#else
+    irq = 0; // host-build stub: real kernel is built with GCC
+#endif
     const u8 line = u8(irq & 0x07);
     if (line == Pic::IRQ_TIMER)
     {
@@ -175,9 +180,13 @@ extern "C" void dos_int21_handler()
 {
     // registers were pushed by stub; here we read via a minimal trampoline
     u8 ah = 0, al = 0, dl = 0, dh = 0, ra = 0, rh = 0;
+#if defined(__GNUC__) || defined(__clang__)
     asm volatile(
         "movb %%ah, %0 \n movb %%al, %1 \n movb %%dl, %2 \n movb %%dh, %3"
         : "=r"(ah), "=r"(al), "=r"(dl), "=r"(dh));
+#endif
     dos::DosApi::instance().dispatch(ah, al, dl, dh, ra, rh);
+#if defined(__GNUC__) || defined(__clang__)
     asm volatile("movb %0, %%al" ::"r"(ra));
+#endif
 }

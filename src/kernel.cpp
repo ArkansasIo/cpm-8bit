@@ -3,6 +3,11 @@
 #include "bus.hpp"
 #include "port8.hpp"
 
+// MinGW decorates C symbols with a leading underscore; the asm defines
+// _irq_stub/_dos_api_gate, which appear here as irq_stub/dos_api_gate.
+extern "C" char irq_stub[];
+extern "C" char dos_api_gate[];
+
 namespace kernel
 {
 
@@ -25,12 +30,15 @@ namespace kernel
     void Kernel::remap_interrupts()
     {
         // install IRQ stub and DOS gate vectors (segment 0, offsets below)
-        // note: flat tiny model, so vectors point at 0:offset
-        u16 *ivt = reinterpret_cast<u16 *>(0x0000);
-        extern "C" char _irq_stub[], _dos_api_gate[];
-        ivt[0x20 * 2] = u16(reinterpret_cast<u32>(_irq_stub) & 0xFFFF);
+        // note: flat tiny model, so vectors point at 0:offset.
+        // The IVT lives at physical 0x0000; use a volatile pointer and
+        // suppress array-bounds diagnostics for the deliberate 0-based write.
+        volatile u16 *ivt = reinterpret_cast<volatile u16 *>(0x0000);
+        const u32 stub  = reinterpret_cast<u32>(irq_stub);
+        const u32 gate  = reinterpret_cast<u32>(dos_api_gate);
+        ivt[0x20 * 2]     = u16(stub & 0xFFFF);
         ivt[0x20 * 2 + 1] = 0;
-        ivt[0x21 * 2] = u16(reinterpret_cast<u32>(_dos_api_gate) & 0xFFFF);
+        ivt[0x21 * 2]     = u16(gate & 0xFFFF);
         ivt[0x21 * 2 + 1] = 0;
     }
 
@@ -166,7 +174,16 @@ extern "C" void kmain()
     bus.probe_all(); // probe devices (OOP virtual dispatch)
     bus.init_all();  // init: PIC remap, PIT 100Hz, keyboard
 
-    Kernel::instance().banner();
-    Kernel::instance().remap_interrupts();
-    Kernel::instance().shell(); // never returns
+    Kernel::instance().boot(); // banner → interrupts → shell, never returns
+}
+
+namespace kernel
+{
+    [[noreturn]] void Kernel::boot()
+    {
+        banner();
+        remap_interrupts();
+        shell(); // never returns
+        for (;;) asm volatile("hlt"); // unreachable, satisfies noreturn
+    }
 }

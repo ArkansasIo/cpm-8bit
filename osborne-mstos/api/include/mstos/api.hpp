@@ -1,4 +1,4 @@
-#api / include / mstos / api.hpp — the stable MSTOS 2.2 C++ 23 OS API
+// api/include/mstos/api.hpp — the stable MSTOS 2.2 C++23 OS API
 //
 // This is the boundary between applications and MSTOS services.
 // Nothing in this header leaks emulator, kernel or filesystem internals.

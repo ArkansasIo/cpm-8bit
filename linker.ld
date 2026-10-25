@@ -1,5 +1,5 @@
 /* kernel/linker.ld — link kernel at 0x7E00 (right after bootsector) */
-OUTPUT_FORMAT("elf32-i386")
+OUTPUT_FORMAT(binary)
 OUTPUT_ARCH(i386)
 ENTRY(_kstart)
 

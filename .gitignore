@@ -4,3 +4,8 @@
 *.img
 *.lst
 *.exe
+boot/boot.bin
+src/*.o
+kernel.bin
+kernel_pe*.tmp
+src/hello*.*

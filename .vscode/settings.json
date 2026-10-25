@@ -1,4 +1,13 @@
 {
     "editor.inlineSuggest.enabled": true,
-    "cmake.sourceDirectory": "C:/Users/Shadow/Documents/New folder (4)/osborne-mstos"
+    "cmake.sourceDirectory": "C:/Users/Shadow/Documents/New folder (4)/osborne-mstos",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/osborne-mstos",
+        "${workspaceFolder}/osborne-mstos/api/include"
+    ],
+    "C_Cpp.default.compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+    "C_Cpp.default.cStandard": "c17",
+    "C_Cpp.default.cppStandard": "c++23",
+    "C_Cpp.default.intelliSenseMode": "gcc-x64"
 }

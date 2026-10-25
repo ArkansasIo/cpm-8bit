@@ -19,6 +19,9 @@ namespace kernel
         // never returns; runs the kernel forever
         [[noreturn]] void run();
 
+        // one-shot boot entry: banner → interrupt setup → shell
+        [[noreturn]] void boot();
+
         [[nodiscard]] u32 uptime_ticks() const { return _bus.pit().ticks(); }
 
     private:

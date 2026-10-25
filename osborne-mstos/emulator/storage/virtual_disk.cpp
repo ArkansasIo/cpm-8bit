@@ -1,7 +1,7 @@
 // emulator/storage/virtual_disk.cpp — file-backed virtual storage
 #include "../hardware.hpp"
-#include <cstdio>
 #include <filesystem>
+#include <fstream>
 #include <vector>
 
 namespace emulator
@@ -22,30 +22,29 @@ namespace emulator
         detail = std::to_string(gb) + " GB";
         try
         {
-            // real I/O test: create a temp scratch file in the current directory,
-            // write, read back, delete — proves the storage path works.
+            // real I/O test: create a temp scratch file, write, read back, delete
             const char *tmp = "osborne_disk_probe.tmp";
             {
-                std::FILE *f = std::fopen(tmp, "wb");
+                std::ofstream f(tmp, std::ios::binary);
                 if (!f)
                 {
                     detail += " FAULT (write)";
                     return false;
                 }
                 const unsigned char pat[512] = {1};
-                std::fwrite(pat, 1, sizeof pat, f);
-                std::fclose(f);
+                f.write(reinterpret_cast<const char *>(pat), sizeof pat);
             }
-            std::FILE *f = std::fopen(tmp, "rb");
+            std::ifstream f(tmp, std::ios::binary);
             if (!f)
             {
                 detail += " FAULT (open)";
                 return false;
             }
             unsigned char back[512] = {};
-            const bool ok = std::fread(back, 1, sizeof back, f) == sizeof back && back[0] == 1;
-            std::fclose(f);
-            std::remove(tmp);
+            f.read(reinterpret_cast<char *>(back), sizeof back);
+            const bool ok = static_cast<size_t>(f.gcount()) == sizeof back && back[0] == 1;
+            f.close();
+            std::filesystem::remove(tmp);
             if (!ok)
             {
                 detail += " FAULT (verify)";

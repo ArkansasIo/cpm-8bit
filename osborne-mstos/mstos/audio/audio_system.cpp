@@ -176,7 +176,7 @@ namespace mstos::audio
     }
 
     // ---------------- headless backend ----------------
-    bool HeadlessSink::play(const SoundEvent &ev, const Snd8Sequence *retro, std::string &err)
+    bool HeadlessSink::play([[maybe_unused]] const SoundEvent &ev, const Snd8Sequence *retro, std::string &err)
     {
         if (!retro || !retro->ok)
         {

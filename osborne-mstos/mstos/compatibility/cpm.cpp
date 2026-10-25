@@ -28,7 +28,7 @@ namespace mstos::compat
         }
     } // namespace
 
-    void command(const std::string &raw)
+    void command([[maybe_unused]] const std::string &raw)
     {
         using namespace emulator;
         auto &disp = Machine::instance().display();

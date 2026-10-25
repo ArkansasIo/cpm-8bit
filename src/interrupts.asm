@@ -4,6 +4,7 @@ BITS 16
 SECTION .text
 
 GLOBAL _kstart
+EXTERN _kmain
 EXTERN kmain
 
 ; C++23 freestanding helpers
@@ -21,7 +22,7 @@ _kstart:
     mov sp, 0x7000              ; stack below kernel
     sti
     cld
-    call kmain                  ; enter C++ world
+    call _kmain                  ; enter C++ world
 .halt:
     hlt
     jmp .halt
@@ -30,14 +31,14 @@ _kstart:
 ; wrapper: call C++ interrupt handler with a stub frame
 ; -----------------------------------------------
 GLOBAL _irq_stub
-EXTERN hw_irq_handler
+EXTERN _hw_irq_handler
 _irq_stub:
     pusha
     push ds
     push es
     push fs
     push gs
-    call hw_irq_handler
+    call _hw_irq_handler
     pop gs
     pop fs
     pop es
@@ -49,12 +50,12 @@ _irq_stub:
 ; int 21h gate: DOS API call router (called by user programs)
 ; -----------------------------------------------
 GLOBAL _dos_api_gate
-EXTERN dos_int21_handler
+EXTERN _dos_int21_handler
 _dos_api_gate:
     pusha
     push ds
     push es
-    call dos_int21_handler      ; AH = function, DL/DH = 8-bit args
+    call _dos_int21_handler      ; AH = function, DL/DH = 8-bit args
     pop es
     pop ds
     popa
