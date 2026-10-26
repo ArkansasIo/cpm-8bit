@@ -1,6 +1,6 @@
-# MSTOS 2.2 — Ubuntu/GNOME-Style Terminal and System Sound Specification
+# osbex 2.2 — Ubuntu/GNOME-Style Terminal and System Sound Specification
 
-**Project:** CPM-8BIT / MSTOS 2.2  
+**Project:** CPM-8BIT / osbex 2.2  
 **Subsystem:** Linux desktop, terminal, system sound, and UI audio  
 **Reference:** Ubuntu/GNOME-style desktop conventions + CPM-8BIT Atari-2600-inspired 8-bit audio engine  
 **Status:** Architecture and implementation specification  
@@ -8,7 +8,7 @@
 
 ## 1. Purpose
 
-MSTOS 2.2 will provide a Linux-based graphical desktop with a familiar modern workflow. Ubuntu/GNOME is a reference for desktop conventions, but MSTOS is not required to ship GNOME itself.
+osbex 2.2 will provide a Linux-based graphical desktop with a familiar modern workflow. Ubuntu/GNOME is a reference for desktop conventions, but osbex is not required to ship GNOME itself.
 
 The system should have a dedicated sound event for important operating-system states, including boot, login, desktop startup, terminal events, application launch, warnings, errors, shutdown, recovery, diagnostics, and other user-visible events.
 
@@ -23,9 +23,9 @@ CPM-8BIT Virtual Machine
     ↓
 Linux Kernel
     ↓
-MSTOS 2.2 Services
+osbex 2.2 Services
     ↓
-MSTOS Desktop Shell
+osbex Desktop Shell
     ├── Terminal
     ├── File Manager
     ├── Settings
@@ -44,7 +44,7 @@ MSTOS Desktop Shell
 
 ## 3. Ubuntu/GNOME-Style Desktop Features
 
-The MSTOS desktop should provide the following familiar concepts without copying proprietary implementation code:
+The osbex desktop should provide the following familiar concepts without copying proprietary implementation code:
 
 - Application launcher.
 - Top/system status area.
@@ -62,11 +62,11 @@ The MSTOS desktop should provide the following familiar concepts without copying
 - Search.
 - System information.
 
-The visual design, implementation, APIs, and assets should be original CPM-8BIT/MSTOS work.
+The visual design, implementation, APIs, and assets should be original CPM-8BIT/osbex work.
 
 ## 4. Terminal
 
-The terminal is a first-class MSTOS application.
+The terminal is a first-class osbex application.
 
 Required capabilities:
 
@@ -265,7 +265,7 @@ This allows the same event to have a modern presentation or an 8-bit presentatio
 
 ## 8. Audio Themes
 
-MSTOS should support selectable sound themes:
+osbex should support selectable sound themes:
 
 ```text
 modern
@@ -308,7 +308,7 @@ Boot Loader
   ↓ sound.boot.loader_start
 Linux Kernel
   ↓ sound.kernel.start
-MSTOS Services
+osbex Services
   ↓ sound.kernel.ready
 Desktop
   ↓ sound.desktop.start
@@ -374,7 +374,7 @@ Critical sounds must still respect a master volume limit.
 The system sound service receives events rather than letting applications access the audio device directly.
 
 ```cpp
-namespace MSTOS::Audio {
+namespace osbex::Audio {
 
 class SystemSoundService {
 public:
@@ -577,7 +577,7 @@ These are implemented through the CPM-8BIT compatibility layer rather than modif
 The Atari 2600-inspired audio engine is the **retro synthesis backend**, not the complete desktop audio architecture.
 
 ```text
-MSTOS System Sound Event
+osbex System Sound Event
           ↓
     Event Router
        /     \
@@ -592,14 +592,14 @@ This makes it possible to retain the Atari-style 8-bit sound character while sup
 
 ## 21. Linux Audio Integration
 
-The Linux side should use an abstraction layer rather than tying MSTOS directly to a single desktop audio implementation.
+The Linux side should use an abstraction layer rather than tying osbex directly to a single desktop audio implementation.
 
 Recommended architecture:
 
 ```text
-MSTOS::Audio
+osbex::Audio
     ↓
-MSTOS Audio Service
+osbex Audio Service
     ↓
 Linux Audio Adapter
     ↓
@@ -685,7 +685,7 @@ assets/
 
 docs/
 ├── AUDIO_SPEC.md
-└── MSTOS_2.2_UBUNTU_TERMINAL_AND_SYSTEM_SOUNDS.md
+└── osbex_2.2_UBUNTU_TERMINAL_AND_SYSTEM_SOUNDS.md
 
 src/
 └── audio/
@@ -709,7 +709,7 @@ tests/
 
 The system is ready when:
 
-1. MSTOS boots without requiring audio hardware.
+1. osbex boots without requiring audio hardware.
 2. The desktop provides an Ubuntu/GNOME-style modern workflow.
 3. The terminal is fully usable without sound.
 4. Important system events have independent sound IDs.
@@ -724,10 +724,10 @@ The system is ready when:
 
 ## 27. Final System Concept
 
-The resulting CPM-8BIT/MSTOS 2.2 experience is:
+The resulting CPM-8BIT/osbex 2.2 experience is:
 
 ```text
-                 MSTOS 2.2
+                 osbex 2.2
                      │
           ┌──────────┴──────────┐
           │                     │

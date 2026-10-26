@@ -14,7 +14,7 @@ namespace apps::systeminfo
         disp.write("|           SYSTEM INFORMATION           |\n");
         disp.write("+----------------------------------------+\n");
         disp.write(" Machine : Osborne 1 (virtual)\n");
-        disp.write(" OS      : MSTOS 2.2\n");
+        disp.write(" OS      : osbex 2.2\n");
         disp.write(" Platform: 64-bit Linux (simulated under Windows)\n");
         disp.write(" CPU     : " + Machine::instance().cpu().model() + "\n");
         disp.write("           " + std::to_string(Machine::instance().cpu().cores()) + " cores\n");

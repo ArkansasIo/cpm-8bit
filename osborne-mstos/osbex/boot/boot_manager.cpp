@@ -1,16 +1,16 @@
-// mstos/boot/boot_manager.cpp — Osborne Boot Manager (Phase 4)
+// osbex/boot/boot_manager.cpp — Osborne Boot Manager (Phase 4)
 #include "boot_manager.hpp"
 #include "post.hpp"
 #include "emulator/hardware.hpp"
 #include <chrono>
 #include <thread>
 
-namespace mstos::boot
+namespace osbex::boot
 {
     static void pause_ms(unsigned ms) { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); }
 
     static constexpr const char *kItems[] = {
-        "1. Boot MSTOS 2.2",
+        "1. Boot osbex 2.2",
         "2. Recovery Mode",
         "3. Diagnostics",
         "4. CP/M Disk",
@@ -53,7 +53,7 @@ namespace mstos::boot
                 switch (sel)
                 {
                 case 0:
-                    return BootChoice::Mstos;
+                    return BootChoice::osbex;
                 case 1:
                     return BootChoice::Recovery;
                 case 2:
@@ -63,7 +63,7 @@ namespace mstos::boot
                 case 4: // boot device selection: list virtual disks
                     disp.clear();
                     disp.write("BOOT DEVICE SELECTION\n\n");
-                    disp.write("  A: Osborne disk image\n  B: Osborne disk image\n  C: MSTOS filesystem\n  D: Modern storage\n\nPress any key...");
+                    disp.write("  A: Osborne disk image\n  B: Osborne disk image\n  C: osbex filesystem\n  D: Modern storage\n\nPress any key...");
                     {
                         char c2;
                         bool e1, e2;
@@ -100,4 +100,4 @@ namespace mstos::boot
         recovery_main();
     }
 
-} // namespace mstos::boot
+} // namespace osbex::boot

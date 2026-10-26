@@ -1,11 +1,11 @@
-// mstos/core/mstos.cpp — boot chain: Linux → initramfs → MSTOS services
-#include "mstos.hpp"
+// osbex/core/osbex.cpp — boot chain: Linux → initramfs → osbex services
+#include "osbex.hpp"
 #include "../shell/shell.hpp"
 #include "emulator/hardware.hpp"
 #include <chrono>
 #include <thread>
 
-namespace mstos::core
+namespace osbex::core
 {
 
     static void pause_ms(unsigned ms)
@@ -22,13 +22,13 @@ namespace mstos::core
         disp.write("\r" + std::string(what) + " ...... DONE\n");
     }
 
-    Mstos &Mstos::instance()
+    osbex &osbex::instance()
     {
-        static Mstos m;
+        static osbex m;
         return m;
     }
 
-    void Mstos::load_linux_kernel()
+    void osbex::load_linux_kernel()
     {
         // Phase 5: the 64-bit Linux kernel is responsible for scheduling, memory,
         // processes, storage, networking, drivers, security, syscalls.
@@ -41,29 +41,29 @@ namespace mstos::core
         stage_line("Initramfs");
     }
 
-    void Mstos::load_initramfs() { /* folded into load_linux_kernel staging */ }
+    void osbex::load_initramfs() { /* folded into load_linux_kernel staging */ }
 
-    void Mstos::start_services()
+    void osbex::start_services()
     {
         auto &disp = emulator::Machine::instance().display();
-        disp.write("MSTOS 2.2 ......... STARTING\n\n");
+        disp.write("osbex 2.2 ......... STARTING\n\n");
         // system services: filesystem, device services, CP/M compat, app mgmt
-        disp.write("[  OK  ] mstos-fs       (C: MSTOS filesystem)\n");
-        disp.write("[  OK  ] mstos-dev      (device services)\n");
-        disp.write("[  OK  ] mstos-cpm      (CP/M compatibility)\n");
-        disp.write("[  OK  ] mstos-gui      (desktop environment)\n\n");
+        disp.write("[  OK  ] osbex-fs       (C: osbex filesystem)\n");
+        disp.write("[  OK  ] osbex-dev      (device services)\n");
+        disp.write("[  OK  ] osbex-cpm      (CP/M compatibility)\n");
+        disp.write("[  OK  ] osbex-gui      (desktop environment)\n\n");
     }
 
-    void Mstos::run_shell()
+    void osbex::run_shell()
     {
         shell::run();
     }
 
-    [[noreturn]] void Mstos::start()
+    [[noreturn]] void osbex::start()
     {
         load_linux_kernel();
         start_services();
         run_shell(); // never returns
     }
 
-} // namespace mstos::core
+} // namespace osbex::core

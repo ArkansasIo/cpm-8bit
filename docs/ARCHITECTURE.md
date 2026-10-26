@@ -1,26 +1,26 @@
-# MSTOS 2.2 System Architecture
+# osbex 2.2 System Architecture
 
 ## Purpose
 
-Define the major layers and contracts of the Osborne-inspired MSTOS 2.2 platform.
+Define the major layers and contracts of the Osborne-inspired osbex 2.2 platform.
 
 ## Runtime Layers
 
 ```text
 Windows Host
-  -> MSTOS Virtual Machine / Emulator
+  -> osbex Virtual Machine / Emulator
      -> Firmware / POST / Boot Manager
         -> 64-bit Linux Kernel
            -> Initramfs
-              -> MSTOS 2.2 Services
-                 -> MSTOS C++23 API
+              -> osbex 2.2 Services
+                 -> osbex C++23 API
                     -> GUI / Applications
 ```
 
 The CP/M compatibility subsystem is a separate guest environment:
 
 ```text
-MSTOS 2.2
+osbex 2.2
   -> CP/M Compatibility Manager
      -> Z80 CPU Emulation
         -> CP/M 2.2 BIOS/BDOS-compatible environment
@@ -41,18 +41,18 @@ The VM owns virtual CPU state, guest RAM, storage devices, display, keyboard, ti
 
 Linux owns scheduling, memory management, processes, networking, security primitives, drivers, and system calls.
 
-### MSTOS
+### osbex
 
-MSTOS owns the user-facing operating environment, services, compatibility manager, application model, configuration, desktop, and Osborne-inspired experience.
+osbex owns the user-facing operating environment, services, compatibility manager, application model, configuration, desktop, and Osborne-inspired experience.
 
 ### Applications
 
-Applications use the versioned MSTOS API rather than depending directly on emulator internals.
+Applications use the versioned osbex API rather than depending directly on emulator internals.
 
 ## Interface Rules
 
 1. Emulator internals must not be exposed directly to applications.
-2. MSTOS services communicate through explicit interfaces and IPC where appropriate.
+2. osbex services communicate through explicit interfaces and IPC where appropriate.
 3. CP/M software is sandboxed from host resources.
 4. Device access is mediated by virtual devices and Linux drivers.
 5. Public C++23 APIs require versioning and compatibility rules.
@@ -62,7 +62,7 @@ Applications use the versioned MSTOS API rather than depending directly on emula
 
 ### Modern Mode
 
-Boot a 64-bit Linux guest and MSTOS 2.2.
+Boot a 64-bit Linux guest and osbex 2.2.
 
 ### CP/M Mode
 

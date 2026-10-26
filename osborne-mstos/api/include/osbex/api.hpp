@@ -1,12 +1,12 @@
-// api/include/mstos/api.hpp — the stable MSTOS 2.2 C++23 OS API
+// api/include/osbex/api.hpp — the stable osbex 2.2 C++23 OS API
 //
-// This is the boundary between applications and MSTOS services.
+// This is the boundary between applications and osbex services.
 // Nothing in this header leaks emulator, kernel or filesystem internals.
 #pragma once
 #include <cstdint>
 #include <cstddef>
 
-namespace MSTOS
+namespace osbex
 {
 
     // ---------- files ----------
@@ -97,7 +97,7 @@ namespace MSTOS
     // ---------- system information ----------
     struct SystemInfo
     {
-        const char *os_name; // "MSTOS 2.2"
+        const char *os_name; // "osbex 2.2"
         const char *machine; // "Osborne (virtual)"
         const char *cpu_model;
         uint32_t cpu_cores;
@@ -116,4 +116,4 @@ namespace MSTOS
     bool IpcSend(const char *channel, const void *data, size_t bytes);
     bool IpcRecv(const char *channel, void *buf, size_t buf_size, size_t *received);
 
-} // namespace MSTOS
+} // namespace osbex

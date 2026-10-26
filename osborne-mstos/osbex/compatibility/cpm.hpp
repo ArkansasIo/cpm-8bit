@@ -1,14 +1,14 @@
-// mstos/compatibility/cpm.hpp — CP/M compatibility layer interface (isolated)
+// osbex/compatibility/cpm.hpp — CP/M compatibility layer interface (isolated)
 #pragma once
 #include <string>
 
-namespace mstos::compat
+namespace osbex::compat
 {
 
     // virtual drive mapping
     //   A:  Osborne disk image
     //   B:  Osborne disk image
-    //   C:  MSTOS filesystem
+    //   C:  osbex filesystem
     //   D:  modern storage
     enum class Drive : char
     {

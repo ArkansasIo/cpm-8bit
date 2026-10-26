@@ -1,4 +1,4 @@
-// mstos/boot/post.hpp — Power-On Self Test over the virtual Osborne hardware
+// osbex/boot/post.hpp — Power-On Self Test over the virtual Osborne hardware
 #pragma once
 #include <string>
 #include <vector>
@@ -8,7 +8,7 @@ namespace emulator
     class VirtualDevice;
 }
 
-namespace mstos::boot
+namespace osbex::boot
 {
 
     struct PostResult
@@ -34,4 +34,4 @@ namespace mstos::boot
         bool _fatal = false;
     };
 
-} // namespace mstos::boot
+} // namespace osbex::boot

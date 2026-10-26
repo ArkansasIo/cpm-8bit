@@ -1,12 +1,12 @@
-// mstos/boot/boot_manager.hpp — Osborne Boot Manager (Phase 4)
+// osbex/boot/boot_manager.hpp — Osborne Boot Manager (Phase 4)
 #pragma once
 
-namespace mstos::boot
+namespace osbex::boot
 {
 
     enum class BootChoice
     {
-        Mstos,
+        osbex,
         Recovery,
         Diagnostics,
         CpmDisk,
@@ -24,4 +24,4 @@ namespace mstos::boot
         static const char *title() { return "OSBORNE BOOT MANAGER"; }
     };
 
-} // namespace mstos::boot
+} // namespace osbex::boot

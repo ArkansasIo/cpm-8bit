@@ -1,11 +1,11 @@
-# MSTOS 2.2 API
+# osbex 2.2 API
 
-Stable C++23 boundary between applications and MSTOS services.
+Stable C++23 boundary between applications and osbex services.
 
 ```cpp
-#include <mstos/api.hpp>
+#include <osbex/api.hpp>
 
-using namespace MSTOS;
+using namespace osbex;
 
 int main() {
     File f = OpenFile("C:/notes.txt", FileMode::Write);
@@ -13,7 +13,7 @@ int main() {
     CloseFile(f);
 
     Window w = CreateWindow(640, 480, "Hello");
-    DrawText("MSTOS 2.2", 10, 10);
+    DrawText("osbex 2.2", 10, 10);
     Refresh();
 
     Sleep(1000);
@@ -23,5 +23,5 @@ int main() {
 Categories: Files, Processes, Windows, Graphics, Input, Audio, Networking,
 Storage, System information, Timers, IPC.
 
-The implementation is provided by MSTOS services (`mstos/services`); nothing
+The implementation is provided by osbex services (`osbex/services`); nothing
 in `api/include` depends on the emulator, the Linux kernel, or a filesystem.

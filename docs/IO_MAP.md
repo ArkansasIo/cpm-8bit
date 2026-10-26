@@ -27,7 +27,7 @@ These allocations are project-defined compatibility ports and are not intended t
 
 ## Modern 64-bit Guest
 
-Modern devices use Linux device drivers and platform interfaces. MSTOS should not depend on legacy Z80 port numbers outside the CP/M compatibility subsystem.
+Modern devices use Linux device drivers and platform interfaces. osbex should not depend on legacy Z80 port numbers outside the CP/M compatibility subsystem.
 
 ## Device Contract
 
@@ -46,4 +46,4 @@ Interrupt routing must be centralized in the virtual-machine interrupt controlle
 
 ## Future Hardware
 
-ARM64 and RISC-V board devices will use MMIO, platform buses, or native Linux drivers as appropriate. The MSTOS device abstraction should remain stable across these implementations.
+ARM64 and RISC-V board devices will use MMIO, platform buses, or native Linux drivers as appropriate. The osbex device abstraction should remain stable across these implementations.

@@ -1,4 +1,4 @@
-// mstos/audio/audio_system.cpp — implementation (original, deterministic)
+// osbex/audio/audio_system.cpp — implementation (original, deterministic)
 #include "audio_system.hpp"
 #include <algorithm>
 #include <cctype>
@@ -7,7 +7,7 @@
 #include <fstream>
 #include <sstream>
 
-namespace mstos::audio
+namespace osbex::audio
 {
 
     // ---------------- .8snd parser ----------------
@@ -265,4 +265,4 @@ namespace mstos::audio
             ++_dropped;
     }
 
-} // namespace mstos::audio
+} // namespace osbex::audio

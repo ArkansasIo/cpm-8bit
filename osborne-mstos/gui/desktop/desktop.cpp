@@ -4,7 +4,7 @@
 // virtual display so the architecture exists before a graphics compositor.
 #include "desktop.hpp"
 #include "emulator/hardware.hpp"
-#include "mstos/shell/shell.hpp"
+#include "osbex/shell/shell.hpp"
 
 namespace gui::desktop
 {
@@ -15,7 +15,7 @@ namespace gui::desktop
         auto &disp = Machine::instance().display();
         disp.clear();
         disp.write("+----------------------------------------+\n");
-        disp.write("|  MSTOS 2.2 DESKTOP                     |\n");
+        disp.write("|  osbex 2.2 DESKTOP                     |\n");
         disp.write("+----------------------------------------+\n");
         static constexpr const char *items[] = {
             " Terminal",
@@ -52,7 +52,7 @@ namespace gui::desktop
                 switch (sel)
                 {
                 case 0:
-                    mstos::shell::run();
+                    osbex::shell::run();
                     break; // never returns (terminal = shell)
                 case 1:
                     Machine::instance().display().write("File manager: Milestone 7 (pending)\n");

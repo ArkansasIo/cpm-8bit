@@ -55,7 +55,7 @@ profile = "modern-64"
 memory_mb = 16384
 
 [storage]
-boot_image = "images/mstos.img"
+boot_image = "images/osbex.img"
 
 [display]
 width = 1280
@@ -65,7 +65,7 @@ height = 800
 enabled = true
 
 [boot]
-mode = "mstos"
+mode = "osbex"
 ```
 
 ## Determinism

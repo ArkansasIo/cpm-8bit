@@ -1,32 +1,32 @@
-// mstos/core/mstos.hpp — MSTOS 2.2 operating environment (Phase 6)
+// osbex/core/osbex.hpp — osbex 2.2 operating environment (Phase 6)
 #pragma once
 #include <string>
 
-namespace mstos::core
+namespace osbex::core
 {
 
-    // Boot stages between POST and the MSTOS environment.
+    // Boot stages between POST and the osbex environment.
     enum class Stage
     {
         KernelLoad,
         Initramfs,
-        MstosStart
+        osbexStart
     };
 
-    class Mstos
+    class osbex
     {
     public:
-        static Mstos &instance();
+        static osbex &instance();
 
-        // Linux Kernel → Initramfs → MSTOS 2.2 — never returns
+        // Linux Kernel → Initramfs → osbex 2.2 — never returns
         [[noreturn]] void start();
 
     private:
-        Mstos() = default;
+        osbex() = default;
         void load_linux_kernel(); // Phase 5 (simulated until image pipeline)
         void load_initramfs();
         void start_services();
         void run_shell(); // Phase 6 shell (Milestone 5–6)
     };
 
-} // namespace mstos::core
+} // namespace osbex::core

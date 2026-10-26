@@ -29,7 +29,7 @@ behavior is a compatibility *reference*, no third-party code.
 ## Stack
 
 ```
-MSTOS/Emulator → CPM8-AUDIO8 → deterministic sample queue
+osbex/Emulator → CPM8-AUDIO8 → deterministic sample queue
               → host audio adapter → Windows output
 ```
 
@@ -42,13 +42,13 @@ device clock position, format/version id. Restore must reproduce the same
 subsequent sample sequence in deterministic mode; incompatible versions are
 rejected safely.
 
-## MSTOS C++23 API
+## osbex C++23 API
 
 ```cpp
-namespace MSTOS::Audio { class Device; class Voice; class Mixer;
+namespace osbex::Audio { class Device; class Voice; class Mixer;
                          class SampleStream; class AudioConfig; }
 
-auto audio = mstos.audio().device("cpm8.audio.tia8");
+auto audio = osbex.audio().device("cpm8.audio.tia8");
 audio.voice(0).set_control(0x03);
 audio.voice(0).set_frequency(12);
 audio.voice(0).set_volume(15);
@@ -82,5 +82,5 @@ disconnect/reconnect, headless, invalid register access, version compat.
 
 deterministic init; both voices independently programmable; registers behave
 as specified; stable mixing/clipping; Windows playback via host adapter;
-headless CI works; snapshot/restore deterministic; exposed via MSTOS C++23
+headless CI works; snapshot/restore deterministic; exposed via osbex C++23
 API; automated register/timing tests; no copied implementation source.

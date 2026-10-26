@@ -11,7 +11,7 @@ namespace gui::boot
         disp.clear();
         disp.write(
             "+==========================================+\n"
-            "|        O S B O R N E   1 / MSTOS         |\n"
+            "|        O S B O R N E   1 / osbex         |\n"
             "|        character-oriented  80x25         |\n"
             "+==========================================+\n");
     }

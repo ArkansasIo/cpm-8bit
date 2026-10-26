@@ -1,13 +1,13 @@
-// mstos/shell/shell.cpp — MSTOS 2.2 shell (Osborne-style, C: drive, CP/M verbs)
+// osbex/shell/shell.cpp — osbex 2.2 shell (Osborne-style, C: drive, CP/M verbs)
 #include "shell.hpp"
 #include "emulator/hardware.hpp"
-#include "mstos/compatibility/cpm.hpp"
-#include "mstos/core/mstos.hpp"
+#include "osbex/compatibility/cpm.hpp"
+#include "osbex/core/osbex.hpp"
 #include <chrono>
 #include <cstring>
 #include <filesystem>
 
-namespace mstos::shell
+namespace osbex::shell
 {
 
     static std::string now_hhmmss()
@@ -31,7 +31,7 @@ namespace mstos::shell
         auto &disp = Machine::instance().display();
         auto &kbd = Machine::instance().keyboard();
 
-        disp.write("MSTOS 2.2 shell — type HELP for commands.\n\n");
+        disp.write("osbex 2.2 shell — type HELP for commands.\n\n");
 
         std::string line;
         while (true)
@@ -71,18 +71,18 @@ namespace mstos::shell
             if (line == "help" || line == "HELP" || line == "?")
             {
                 disp.write(
-                    "VER      - MSTOS 2.2 version and machine info\n"
+                    "VER      - osbex 2.2 version and machine info\n"
                     "TIME     - current time\n"
                     "DIR      - list current directory (C:)\n"
                     "SYSINFO  - virtual hardware summary\n"
-                    "CPM      - CP/M compatibility: A: B: images, C: MSTOS, D: modern\n"
+                    "CPM      - CP/M compatibility: A: B: images, C: osbex, D: modern\n"
                     "SAVE     - save virtual machine state\n"
                     "LOAD     - load virtual machine state\n"
                     "EXIT     - power off\n");
             }
             else if (line == "ver" || line == "VER")
             {
-                disp.write("MSTOS 2.2 on Osborne (virtual) — heritage: Osborne 1, platform: Linux x86-64\n");
+                disp.write("osbex 2.2 on Osborne (virtual) — heritage: Osborne 1, platform: Linux x86-64\n");
             }
             else if (line == "time" || line == "TIME")
             {
@@ -130,4 +130,4 @@ namespace mstos::shell
         }
     }
 
-} // namespace mstos::shell
+} // namespace osbex::shell

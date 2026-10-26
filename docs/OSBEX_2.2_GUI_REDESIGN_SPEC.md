@@ -1,15 +1,15 @@
-# MSTOS 2.2 — Redesigned Ubuntu/GNOME-Style GUI Specification
+# osbex 2.2 — Redesigned Ubuntu/GNOME-Style GUI Specification
 
 ## 1. Purpose
 
-This document defines the visual and interaction design for the new **MSTOS 2.2 Desktop GUI**. The design uses the usability principles of a free Linux desktop such as Ubuntu's GNOME-based environment, but it is **not a copy of Ubuntu or GNOME**. MSTOS has its own shell, identity, navigation model, window chrome, icons, sounds, settings, and system applications.
+This document defines the visual and interaction design for the new **osbex 2.2 Desktop GUI**. The design uses the usability principles of a free Linux desktop such as Ubuntu's GNOME-based environment, but it is **not a copy of Ubuntu or GNOME**. osbex has its own shell, identity, navigation model, window chrome, icons, sounds, settings, and system applications.
 
 The goal is a familiar modern Linux desktop while preserving the Osborne/CPM-8BIT identity.
 
 ## 2. Design Principles
 
 - Familiar Linux desktop behavior.
-- Original MSTOS visual language.
+- Original osbex visual language.
 - Keyboard-first and mouse-friendly operation.
 - Fast startup and low resource consumption.
 - Clear separation between system, applications, developer tools, and legacy CP/M software.
@@ -21,7 +21,7 @@ The goal is a familiar modern Linux desktop while preserving the Osborne/CPM-8BI
 
 ### Product
 
-**MSTOS 2.2 Desktop**
+**osbex 2.2 Desktop**
 
 ### Visual character
 
@@ -41,7 +41,7 @@ The interface should feel like a modern operating system built for a computer de
 
 ```text
 +-----------------------------------------------------------------------+
-| MSTOS | Activities | Applications | Workspace 1 | Status | 12:30 AM |
+| osbex | Activities | Applications | Workspace 1 | Status | 12:30 AM |
 +-----------------------------------------------------------------------+
 |                                                                       |
 |                                                                       |
@@ -68,7 +68,7 @@ The top bar provides persistent system controls.
 
 ### Left side
 
-- MSTOS logo.
+- osbex logo.
 - Activities/workspace control.
 - Applications menu.
 - Current application title when appropriate.
@@ -92,7 +92,7 @@ The top bar provides persistent system controls.
 
 ## 6. Application Launcher
 
-The launcher is MSTOS's equivalent of a modern Linux application overview.
+The launcher is osbex's equivalent of a modern Linux application overview.
 
 ### Sections
 
@@ -118,7 +118,7 @@ The launcher is MSTOS's equivalent of a modern Linux application overview.
 
 ## 7. Dock / Task Launcher
 
-MSTOS may provide an optional dock at the bottom or side of the screen.
+osbex may provide an optional dock at the bottom or side of the screen.
 
 Each item supports:
 
@@ -135,7 +135,7 @@ The dock is optional so the desktop can operate in a GNOME-like workspace mode w
 
 ## 8. Window Manager
 
-The MSTOS window manager/shell layer controls application windows.
+The osbex window manager/shell layer controls application windows.
 
 ### Required operations
 
@@ -169,7 +169,7 @@ CLOSING
 
 ## 9. Workspaces
 
-MSTOS uses virtual workspaces for application organization.
+osbex uses virtual workspaces for application organization.
 
 Example:
 
@@ -183,7 +183,7 @@ Workspace count can be dynamic.
 
 ## 10. File Manager
 
-### MSTOS Files
+### osbex Files
 
 The file manager provides:
 
@@ -223,7 +223,7 @@ The file manager provides:
 
 ## 11. Terminal
 
-The terminal is a first-class MSTOS application.
+The terminal is a first-class osbex application.
 
 ### Default shell
 
@@ -234,7 +234,7 @@ mst-shell
 ### Example
 
 ```text
-MSTOS 2.2 Terminal
+osbex 2.2 Terminal
 Copyright (c) ArkansasIo
 
 mst@mst:~$ help
@@ -287,7 +287,7 @@ The Settings application is organized into major system categories.
 - Language & Region
 - Date & Time
 - Updates
-- About MSTOS
+- About osbex
 
 ## 13. Control Center
 
@@ -308,7 +308,7 @@ Quick controls:
 
 ## 14. Notification System
 
-Notifications use a unified MSTOS event service.
+Notifications use a unified osbex event service.
 
 Types:
 
@@ -326,7 +326,7 @@ STORAGE
 UPDATE
 ```
 
-Each notification may specify a sound event from the MSTOS audio manifest.
+Each notification may specify a sound event from the osbex audio manifest.
 
 ## 15. Boot and Login Experience
 
@@ -339,7 +339,7 @@ POWER ON
 FIRMWARE / POST
    |
    v
-MSTOS BOOT MANAGER
+osbex BOOT MANAGER
    |
    +---- Linux Kernel
    |
@@ -348,10 +348,10 @@ MSTOS BOOT MANAGER
    +---- CP/M Compatibility
    |
    v
-MSTOS CORE SERVICES
+osbex CORE SERVICES
    |
    v
-MSTOS SHELL
+osbex SHELL
    |
    v
 DESKTOP
@@ -364,11 +364,11 @@ DESKTOP
 3. Storage discovery.
 4. CPU/VM initialization.
 5. Linux boot.
-6. MSTOS services.
+6. osbex services.
 7. Display manager.
 8. Desktop shell.
 
-Each stage has an optional sound event defined by the MSTOS sound manifest.
+Each stage has an optional sound event defined by the osbex sound manifest.
 
 ## 16. Loading Screen
 
@@ -376,7 +376,7 @@ The loading screen is intentionally distinctive rather than a standard Ubuntu sp
 
 ### Design
 
-- MSTOS logo.
+- osbex logo.
 - System status line.
 - Progress indicator.
 - Optional diagnostic messages.
@@ -386,7 +386,7 @@ The loading screen is intentionally distinctive rather than a standard Ubuntu sp
 Example:
 
 ```text
-             MSTOS 2.2
+             osbex 2.2
        MODERN COMPUTING SYSTEM
 
        [##########----------]  52%
@@ -394,7 +394,7 @@ Example:
        Initializing virtual storage...
        CPU: Z80 COMPAT / MODERN-64
        RAM: 64 MB
-       DISPLAY: MSTOS-FB
+       DISPLAY: osbex-FB
 
        Press F8 for Recovery
 ```
@@ -464,7 +464,7 @@ All fonts must support the required Unicode range for the selected localization 
 
 ## 20. Icons
 
-MSTOS uses an original icon set.
+osbex uses an original icon set.
 
 Required icon families:
 
@@ -507,7 +507,7 @@ Metrics:
 
 ## 22. VM Control Panel
 
-Because MSTOS is initially hosted by a Windows application, the GUI exposes the virtual machine directly.
+Because osbex is initially hosted by a Windows application, the GUI exposes the virtual machine directly.
 
 Controls:
 
@@ -544,11 +544,11 @@ MODE: CP/M 2.2
 [ TERMINAL ] [ DEBUG ] [ SNAPSHOT ]
 ```
 
-This keeps historical software isolated from the modern MSTOS desktop while making it easy to launch.
+This keeps historical software isolated from the modern osbex desktop while making it easy to launch.
 
 ## 24. Audio/UI Integration
 
-Every important GUI action can reference an MSTOS sound event.
+Every important GUI action can reference an osbex sound event.
 
 Examples:
 
@@ -622,7 +622,7 @@ Developer Mode exposes:
 - I/O viewer.
 - Device inspector.
 - Linux logs.
-- MSTOS service logs.
+- osbex service logs.
 - Audio event inspector.
 - GUI event inspector.
 - CP/M debugger.
@@ -633,13 +633,13 @@ Developer Mode exposes:
 
 ```text
 +---------------------------------------------------+
-| MSTOS Desktop Shell                               |
+| osbex Desktop Shell                               |
 +---------------------------------------------------+
 | Window Manager | Launcher | Notifications        |
 +---------------------------------------------------+
 | System UI Services                                |
 +---------------------------------------------------+
-| MSTOS C++23 API                                  |
+| osbex C++23 API                                  |
 +---------------------------------------------------+
 | Linux User Space / Guest Services                 |
 +---------------------------------------------------+
@@ -651,7 +651,7 @@ Developer Mode exposes:
 +---------------------------------------------------+
 ```
 
-The GUI must not directly depend on the Windows host. The UI API should target the MSTOS abstraction layer so that the same shell can eventually operate on physical ARM64/RISC-V hardware.
+The GUI must not directly depend on the Windows host. The UI API should target the osbex abstraction layer so that the same shell can eventually operate on physical ARM64/RISC-V hardware.
 
 ## 29. Recommended Technology
 
@@ -669,7 +669,7 @@ Recommended architecture:
 - Theme/token system.
 - Application/plugin registry.
 
-The implementation should avoid hard-coding GNOME-specific APIs into MSTOS core interfaces.
+The implementation should avoid hard-coding GNOME-specific APIs into osbex core interfaces.
 
 ## 30. GUI File/Module Plan
 
@@ -726,7 +726,7 @@ SHUTDOWN / REBOOT
 
 ## 32. Originality Requirement
 
-MSTOS may use established desktop concepts and documented Linux interfaces, but its implementation, UI layouts, APIs, themes, icons, sound sequences, configuration formats, and application integration should be independently authored for this project.
+osbex may use established desktop concepts and documented Linux interfaces, but its implementation, UI layouts, APIs, themes, icons, sound sequences, configuration formats, and application integration should be independently authored for this project.
 
 Third-party components must retain their applicable licenses and attribution requirements.
 
@@ -766,7 +766,7 @@ Third-party components must retain their applicable licenses and attribution req
 
 ### GUI Phase 5 — Visual Identity
 
-- Final MSTOS theme.
+- Final osbex theme.
 - Icon set.
 - Typography.
 - Animations.
@@ -785,9 +785,9 @@ Third-party components must retain their applicable licenses and attribution req
 
 ## 34. Definition of Done
 
-The redesigned MSTOS GUI is complete when:
+The redesigned osbex GUI is complete when:
 
-- The desktop can boot and operate without GNOME being a required MSTOS dependency.
+- The desktop can boot and operate without GNOME being a required osbex dependency.
 - Windows can be moved, resized, tiled, minimized, maximized, and closed.
 - Applications can be searched and launched.
 - Terminal and file manager are functional.
@@ -798,4 +798,4 @@ The redesigned MSTOS GUI is complete when:
 - Audio events are mapped to GUI/system events.
 - Accessibility controls work.
 - The shell can be ported away from the Windows host abstraction.
-- The final visual system is recognizably MSTOS rather than a clone of Ubuntu/GNOME.
+- The final visual system is recognizably osbex rather than a clone of Ubuntu/GNOME.

@@ -1,11 +1,11 @@
-// mstos/recovery/recovery.cpp — minimal recovery environment (Phase 9)
+// osbex/recovery/recovery.cpp — minimal recovery environment (Phase 9)
 // capabilities: hardware diagnostics, boot-log inspection, fsck, kernel
-// selection, MSTOS recovery, config repair, virtual disk inspection
+// selection, osbex recovery, config repair, virtual disk inspection
 #include "recovery.hpp"
 #include "emulator/hardware.hpp"
-#include "mstos/boot/post.hpp"
+#include "osbex/boot/post.hpp"
 
-namespace mstos::recovery
+namespace osbex::recovery
 {
 
     static void diagnostics()
@@ -40,7 +40,7 @@ namespace mstos::recovery
         auto &disp = Machine::instance().display();
         auto &kbd = Machine::instance().keyboard();
 
-        disp.write("MSTOS RECOVERY\n");
+        disp.write("osbex RECOVERY\n");
         disp.write(" 1. Hardware diagnostics\n 2. Boot log\n 3. Virtual disk inspection\n 4. Exit recovery\n");
         disp.write("Select: ");
         while (true)
@@ -74,7 +74,7 @@ namespace mstos::recovery
         std::exit(0);
     }
 
-} // namespace mstos::recovery
+} // namespace osbex::recovery
 
 // bridge used by the boot manager on POST failure
-void recovery_main() { mstos::recovery::run(); }
+void recovery_main() { osbex::recovery::run(); }

@@ -1,12 +1,12 @@
-// mstos/compatibility/cpm.cpp — CP/M/Z80 compatibility layer (Phase 8, isolated
-// from MSTOS core and Linux; runs legacy software against virtual drives)
+// osbex/compatibility/cpm.cpp — CP/M/Z80 compatibility layer (Phase 8, isolated
+// from osbex core and Linux; runs legacy software against virtual drives)
 #include "cpm.hpp"
 #include "emulator/hardware.hpp"
 #include <filesystem>
 #include <fstream>
 #include <map>
 
-namespace mstos::compat
+namespace osbex::compat
 {
 
     namespace
@@ -35,7 +35,7 @@ namespace mstos::compat
         disp.write("CP/M compatibility layer 2.2\n");
         disp.write("  A: " + g_drives[Drive::A].image + (g_drives[Drive::A].mounted ? " [mounted]" : "") + "\n");
         disp.write("  B: " + g_drives[Drive::B].image + (g_drives[Drive::B].mounted ? " [mounted]" : "") + "\n");
-        disp.write("  C: MSTOS filesystem\n");
+        disp.write("  C: osbex filesystem\n");
         disp.write("  D: modern storage\n");
         disp.write("usage: CPM MOUNT <drive> <image.dsk> | CPM DIR <drive> | CPM RUN <prog.com>\n");
     }
@@ -50,10 +50,10 @@ namespace mstos::compat
         if (!a.mounted)
         {
             disp.write("No disk image mounted on A:.\n");
-            disp.write("Mount one from the MSTOS shell: CPM MOUNT A: mydisk.dsk\n");
+            disp.write("Mount one from the osbex shell: CPM MOUNT A: mydisk.dsk\n");
             return;
         }
         disp.write("Booting " + a.image + " ...\n(Z80 emulation pipeline lands in Milestone 8)\n");
     }
 
-} // namespace mstos::compat
+} // namespace osbex::compat

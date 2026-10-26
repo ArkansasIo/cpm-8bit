@@ -1,10 +1,10 @@
-# Osborne MSTOS 2.2 — Development Plan
+# Osborne osbex 2.2 — Development Plan
 
 ## 1. Project Overview
 
-Build a modern **Osborne 1-inspired computer and operating environment** called **MSTOS 2.2**, initially delivered as a Windows application.
+Build a modern **Osborne 1-inspired computer and operating environment** called **osbex 2.2**, initially delivered as a Windows application.
 
-The first implementation will run entirely inside Windows so the hardware, boot process, Linux kernel, MSTOS services, GUI, and compatibility layers can be developed and tested safely before moving to dedicated physical hardware.
+The first implementation will run entirely inside Windows so the hardware, boot process, Linux kernel, osbex services, GUI, and compatibility layers can be developed and tested safely before moving to dedicated physical hardware.
 
 ## 2. Core Architecture
 
@@ -36,7 +36,7 @@ Osborne Bootloader
 Initramfs
   │
   ▼
-MSTOS 2.2
+osbex 2.2
   │
   ├── System services
   ├── Filesystem
@@ -74,7 +74,7 @@ Example:
 
 ```text
 OSBORNE COMPUTER SYSTEM
-MSTOS 2.2
+osbex 2.2
 
 CPU ............... OK
 MEMORY ............ 16384 MB OK
@@ -85,7 +85,7 @@ NETWORK ........... OK
 
 Linux Kernel ...... LOADING
 Initramfs ......... LOADING
-MSTOS 2.2 ......... STARTING
+osbex 2.2 ......... STARTING
 ```
 
 The memory value must come from the configured virtual hardware rather than a hard-coded fake value.
@@ -113,7 +113,7 @@ Provide a boot menu such as:
 ```text
 OSBORNE BOOT MANAGER
 
-1. Boot MSTOS 2.2
+1. Boot osbex 2.2
 2. Recovery Mode
 3. Diagnostics
 4. CP/M Disk
@@ -142,9 +142,9 @@ Linux is responsible for:
 
 Avoid modifying/forking Linux unless there is a concrete technical requirement.
 
-### Phase 6 — MSTOS 2.2
+### Phase 6 — osbex 2.2
 
-MSTOS 2.2 is the Osborne-inspired operating environment above Linux.
+osbex 2.2 is the Osborne-inspired operating environment above Linux.
 
 Responsibilities:
 
@@ -166,15 +166,15 @@ Expose virtual drives:
 ```text
 A:  Osborne disk image
 B:  Osborne disk image
-C:  MSTOS filesystem
+C:  osbex filesystem
 D:  Modern storage
 ```
 
-The compatibility layer should be isolated from the Linux kernel and MSTOS core.
+The compatibility layer should be isolated from the Linux kernel and osbex core.
 
 ## 5. OS API
 
-Create a stable API between MSTOS services and applications.
+Create a stable API between osbex services and applications.
 
 The primary application/system language should be **C++23**, while low-level hardware and boot components can use Assembly and other appropriate systems languages.
 
@@ -195,7 +195,7 @@ Example API categories:
 Example:
 
 ```cpp
-namespace MSTOS {
+namespace osbex {
     File OpenFile(const char* path);
     Process CreateProcess(const char* program);
     Window CreateWindow(int width, int height);
@@ -210,7 +210,7 @@ namespace MSTOS {
 
 Primary language for:
 
-- MSTOS services
+- osbex services
 - GUI
 - Application framework
 - OS API
@@ -254,7 +254,7 @@ The visual design can preserve Osborne-era typography, layout ideas, and charact
 
 ## 8. Recovery System
 
-Provide a minimal recovery environment that can start when MSTOS or Linux cannot complete normal startup.
+Provide a minimal recovery environment that can start when osbex or Linux cannot complete normal startup.
 
 Recovery capabilities:
 
@@ -262,7 +262,7 @@ Recovery capabilities:
 - Boot-log inspection
 - Filesystem checks
 - Kernel selection
-- MSTOS recovery
+- osbex recovery
 - Configuration repair
 - Virtual disk inspection
 
@@ -306,7 +306,7 @@ The final system should have three layers of identity:
 Osborne 1 heritage
        │
        ▼
-MSTOS 2.2 operating environment
+osbex 2.2 operating environment
        │
        ▼
 Modern 64-bit Linux platform
@@ -317,7 +317,7 @@ The goal is not to turn the original Osborne 1 hardware into a modern Linux comp
 ## 12. Proposed Repository Structure
 
 ```text
-osborne-mstos/
+osborne-osbex/
 ├── README.md
 ├── PLAN.md
 ├── LICENSE
@@ -338,7 +338,7 @@ osborne-mstos/
 ├── kernel/
 │   └── linux/
 ├── initramfs/
-├── mstos/
+├── osbex/
 │   ├── init/
 │   ├── core/
 │   ├── services/
@@ -387,7 +387,7 @@ Functional Osborne boot manager.
 64-bit Linux kernel boots inside the virtual machine.
 
 ### Milestone 5
-MSTOS 2.2 initializes above Linux.
+osbex 2.2 initializes above Linux.
 
 ### Milestone 6
 C++23 OS API becomes available.
@@ -408,4 +408,4 @@ System is portable to dedicated ARM64/RISC-V hardware.
 
 **Build the complete experience in Windows first, then move the proven architecture to physical hardware.**
 
-This minimizes hardware risk while allowing the bootloader, Linux integration, MSTOS 2.2, API, GUI, diagnostics, and compatibility systems to be developed and tested as one coherent project.
+This minimizes hardware risk while allowing the bootloader, Linux integration, osbex 2.2, API, GUI, diagnostics, and compatibility systems to be developed and tested as one coherent project.

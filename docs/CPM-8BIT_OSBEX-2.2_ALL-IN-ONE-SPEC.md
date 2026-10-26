@@ -1,7 +1,7 @@
-# CPM-8BIT / MSTOS 2.2 — All-in-One System Specification
+# CPM-8BIT / osbex 2.2 — All-in-One System Specification
 
 **Project:** CPM-8BIT
-**System:** MSTOS 2.2
+**System:** osbex 2.2
 **Status:** Architecture and implementation master specification
 **Code policy:** All new implementation code, interfaces, schemas, tests, and tooling are to be independently authored for this project.
 
@@ -9,7 +9,7 @@
 
 CPM-8BIT is an Osborne-inspired modern computer platform. The first implementation runs as a Windows application hosting a virtual computer. The architecture is designed to migrate later to dedicated ARM64 or RISC-V hardware.
 
-The project preserves the CP/M/Osborne identity while using a modern 64-bit execution environment, Linux kernel, MSTOS 2.2 system personality, C++23 APIs, and a controlled Z80/CP/M compatibility subsystem.
+The project preserves the CP/M/Osborne identity while using a modern 64-bit execution environment, Linux kernel, osbex 2.2 system personality, C++23 APIs, and a controlled Z80/CP/M compatibility subsystem.
 
 ### Design goals
 
@@ -35,11 +35,11 @@ Boot Manager
   ↓
 Linux Kernel + initramfs
   ↓
-MSTOS 2.2 Services
+osbex 2.2 Services
   ↓
 C++23 System API
   ↓
-MSTOS Desktop / Applications
+osbex Desktop / Applications
 ```
 
 Legacy compatibility path:
@@ -95,7 +95,7 @@ The execution subsystem provides:
 - Breakpoints and watchpoints.
 - Single-step execution.
 - Disassembly/debug inspection.
-- CPU feature identification exposed to firmware and MSTOS.
+- CPU feature identification exposed to firmware and osbex.
 
 ## 5. Memory Architecture
 
@@ -135,7 +135,7 @@ The boot screen must report actual discovered/configured values.
 Example:
 
 ```text
-OSBORNE COMPUTER SYSTEM / MSTOS 2.2
+OSBORNE COMPUTER SYSTEM / osbex 2.2
 CPU ............ OK
 MEMORY ......... <actual guest/physical amount> OK
 STORAGE ........ <detected capacity> OK
@@ -151,7 +151,7 @@ POST records machine identity, firmware version, hardware/device inventory, dete
 
 Required boot entries:
 
-1. Normal MSTOS boot.
+1. Normal osbex boot.
 2. Linux/recovery boot.
 3. CP/M disk boot.
 4. Diagnostics.
@@ -161,7 +161,7 @@ The boot manager also provides configurable boot order, timeout, boot arguments,
 
 ## 9. Linux Integration
 
-Linux is the underlying kernel/platform layer. MSTOS 2.2 is a distinct system personality and service layer above Linux rather than a replacement kernel.
+Linux is the underlying kernel/platform layer. osbex 2.2 is a distinct system personality and service layer above Linux rather than a replacement kernel.
 
 Required integration work:
 
@@ -176,7 +176,7 @@ Required integration work:
 - RISC-V target.
 - Development x86-64 target where useful.
 
-## 10. MSTOS 2.2 Core
+## 10. osbex 2.2 Core
 
 Core services include:
 
@@ -201,21 +201,21 @@ The public API is original, versioned, documented, and tested.
 Planned namespaces/services:
 
 ```text
-MSTOS::System
-MSTOS::Process
-MSTOS::Thread
-MSTOS::Memory
-MSTOS::File
-MSTOS::Directory
-MSTOS::Device
-MSTOS::Window
-MSTOS::Graphics
-MSTOS::Input
-MSTOS::Audio
-MSTOS::Network
-MSTOS::Timer
-MSTOS::IPC
-MSTOS::Security
+osbex::System
+osbex::Process
+osbex::Thread
+osbex::Memory
+osbex::File
+osbex::Directory
+osbex::Device
+osbex::Window
+osbex::Graphics
+osbex::Input
+osbex::Audio
+osbex::Network
+osbex::Timer
+osbex::IPC
+osbex::Security
 ```
 
 The API must define ownership, error handling, ABI/version policy, threading rules, permissions, and compatibility guarantees.
@@ -259,7 +259,7 @@ Historical CP/M binaries and other third-party software must be distributed only
 Storage specifications include:
 
 - Versioned virtual disk-image format.
-- Bootable MSTOS images.
+- Bootable osbex images.
 - CP/M/Osborne disk images.
 - Mount/unmount operations.
 - Snapshots and rollback.
@@ -319,7 +319,7 @@ Developer diagnostics include:
 - POST log.
 - Boot log.
 - Kernel log capture.
-- MSTOS service logs.
+- osbex service logs.
 - CPU instruction trace.
 - Register/memory inspection.
 - Breakpoints/watchpoints.
@@ -360,7 +360,7 @@ Linux Kernel
  ↓
 initramfs
  ↓
-MSTOS 2.2
+osbex 2.2
  ↓
 C++23 API
  ↓
@@ -437,11 +437,11 @@ The platform should support:
 - Screen-reader-friendly controls where supported.
 - Configurable text sizes.
 - Localization-ready resources.
-- Unicode in modern MSTOS applications.
+- Unicode in modern osbex applications.
 
 ## 26. Licensing and Originality
 
-All new CPM-8BIT/MSTOS source code, interfaces, file formats, schemas, tests, and implementation designs should be independently authored for this project.
+All new CPM-8BIT/osbex source code, interfaces, file formats, schemas, tests, and implementation designs should be independently authored for this project.
 
 Third-party components retain their original licenses and attribution. Compatibility with historical systems does not imply ownership of historical software.
 
@@ -480,12 +480,12 @@ VM lifecycle, CPU execution, RAM, MMIO, virtual devices, storage, display, keybo
 Firmware initialization, memory discovery/testing, storage detection, display/keyboard/network initialization, inventory, POST errors, and diagnostic logging.
 
 ### Phase 4 — Boot Manager
-MSTOS, Linux/recovery, CP/M, diagnostics, safe mode, boot order, timeout, arguments, integrity checking, and fallback.
+osbex, Linux/recovery, CP/M, diagnostics, safe mode, boot order, timeout, arguments, integrity checking, and fallback.
 
 ### Phase 5 — Linux Integration
 Kernel build, initramfs, root filesystem, virtual hardware support, kernel command line, logging, crash handling, ARM64/RISC-V support.
 
-### Phase 6 — MSTOS 2.2 Core
+### Phase 6 — osbex 2.2 Core
 Initialization, services, processes, threads, filesystem, devices, users, IPC, permissions, configuration, logging, timers, and recovery.
 
 ### Phase 7 — C++23 API
@@ -527,8 +527,8 @@ SoC, RAM, storage, display, keyboard, USB, networking, audio, RTC, power managem
 ### Phase 19 — Compatibility and Preservation
 CP/M software preservation, Osborne disk conversion, historical profiles, compatibility tests, and documentation.
 
-### Phase 20 — MSTOS 2.2 Release 1.0
-Release the stable Windows VM, MSTOS platform, C++23 SDK/API, CP/M compatibility environment, documentation, and reproducible build artifacts.
+### Phase 20 — osbex 2.2 Release 1.0
+Release the stable Windows VM, osbex platform, C++23 SDK/API, CP/M compatibility environment, documentation, and reproducible build artifacts.
 
 ## 29. Planned Documentation Set
 
@@ -548,7 +548,7 @@ The repository should maintain focused specifications including:
 - `BOOT_SPEC.md`
 - `POST_SPEC.md`
 - `LINUX_INTEGRATION.md`
-- `MSTOS_SPEC.md`
+- `osbex_SPEC.md`
 - `API_SPEC.md`
 - `GUI_SPEC.md`
 - `CPM_COMPATIBILITY.md`
@@ -574,7 +574,7 @@ The first complete platform milestone is reached when:
 - POST reports actual configured guest resources.
 - Boot Manager selects and verifies a boot target.
 - A real Linux kernel boots inside the VM.
-- MSTOS 2.2 services initialize above Linux.
+- osbex 2.2 services initialize above Linux.
 - The C++23 API is versioned and tested.
 - The desktop operates without unrestricted host access.
 - CP/M software executes through the Z80 compatibility layer.
@@ -584,7 +584,7 @@ The first complete platform milestone is reached when:
 
 ## 31. Unique-Code Requirement
 
-CPM-8BIT/MSTOS implementation code must be independently authored for this project. Project namespaces, modules, interfaces, device contracts, test suites, configuration schemas, and tools should be designed specifically for CPM-8BIT/MSTOS.
+CPM-8BIT/osbex implementation code must be independently authored for this project. Project namespaces, modules, interfaces, device contracts, test suites, configuration schemas, and tools should be designed specifically for CPM-8BIT/osbex.
 
 Compatibility layers may implement documented external protocols or historical machine behavior, but must not copy source code from existing implementations.
 
@@ -605,7 +605,7 @@ Boot Manager
   ↓
 Linux Kernel
   ↓
-MSTOS 2.2
+osbex 2.2
   ↓
 C++23 API
   ↓
@@ -619,4 +619,4 @@ CP/M → Z80 Emulator → CP/M BIOS/BDOS → Osborne Disk Images
 
 ## 33. Engineering Principle
 
-**The specification is the contract.** The emulator, firmware, Linux integration, MSTOS services, C++23 API, GUI, CP/M compatibility layer, tests, and future physical hardware must implement the same versioned architecture rather than becoming unrelated implementations.
+**The specification is the contract.** The emulator, firmware, Linux integration, osbex services, C++23 API, GUI, CP/M compatibility layer, tests, and future physical hardware must implement the same versioned architecture rather than becoming unrelated implementations.

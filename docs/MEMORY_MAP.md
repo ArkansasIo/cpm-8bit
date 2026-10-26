@@ -22,7 +22,7 @@ This is an initial design allocation, not a claim about original Osborne hardwar
 
 ## Modern 64-bit Guest
 
-Modern MSTOS uses the memory map supplied by the selected 64-bit Linux guest and boot firmware. MSTOS must query memory through the platform abstraction rather than hard-coding a capacity.
+Modern osbex uses the memory map supplied by the selected 64-bit Linux guest and boot firmware. osbex must query memory through the platform abstraction rather than hard-coding a capacity.
 
 The boot display therefore reports detected/configured guest RAM, for example:
 

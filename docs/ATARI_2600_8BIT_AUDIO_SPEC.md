@@ -1,6 +1,6 @@
 # CPM-8BIT — Atari 2600-Style 8-Bit Audio Specification
 
-**Project:** CPM-8BIT / MSTOS 2.2  
+**Project:** CPM-8BIT / osbex 2.2  
 **Subsystem:** 8-bit audio  
 **Profile:** Atari 2600-inspired TIA-style sound  
 **Status:** Architecture and implementation specification  
@@ -8,7 +8,7 @@
 
 ## 1. Purpose
 
-CPM-8BIT will include an optional 8-bit audio subsystem inspired by the sound architecture of the Atari 2600. The goal is to reproduce the characteristic programmable-console sound model while integrating it with the CPM-8BIT virtual machine, MSTOS 2.2, the Windows application, the CP/M compatibility environment, and future physical hardware.
+CPM-8BIT will include an optional 8-bit audio subsystem inspired by the sound architecture of the Atari 2600. The goal is to reproduce the characteristic programmable-console sound model while integrating it with the CPM-8BIT virtual machine, osbex 2.2, the Windows application, the CP/M compatibility environment, and future physical hardware.
 
 The audio device is a **two-voice programmable sound generator** with compact register-style control. It is intentionally small, deterministic, and suitable for both an emulator and a future FPGA/embedded implementation.
 
@@ -167,7 +167,7 @@ The Windows application should provide:
 The guest device must not depend directly on Windows audio APIs:
 
 ```text
-MSTOS / Emulator
+osbex / Emulator
       ↓
 CPM8-AUDIO8
       ↓
@@ -203,12 +203,12 @@ Snapshots include:
 
 Snapshot restore must reproduce the same subsequent guest audio sequence in deterministic mode.
 
-## 13. MSTOS C++23 Audio API
+## 13. osbex C++23 Audio API
 
 The original public API uses:
 
 ```cpp
-namespace MSTOS::Audio {
+namespace osbex::Audio {
     class Device;
     class Voice;
     class Mixer;
@@ -220,7 +220,7 @@ namespace MSTOS::Audio {
 Conceptual usage:
 
 ```cpp
-auto audio = mstos.audio().device("cpm8.audio.tia8");
+auto audio = osbex.audio().device("cpm8.audio.tia8");
 audio.voice(0).set_control(0x03);
 audio.voice(0).set_frequency(12);
 audio.voice(0).set_volume(15);
@@ -248,7 +248,7 @@ This profile is an audio-development target and is not a claim of complete Atari
 
 ## 16. Future Atari 2600 Compatibility Profile
 
-A future full Atari 2600 profile should remain isolated from the core MSTOS architecture and may contain:
+A future full Atari 2600 profile should remain isolated from the core osbex architecture and may contain:
 
 ```text
 profiles/
@@ -376,12 +376,12 @@ Virtual Hardware
           ↓
       2 programmable voices
           ↓
-      MSTOS::Audio
+      osbex::Audio
           ↓
       Windows Audio Backend
 ```
 
-This preserves the project's 8-bit identity while allowing MSTOS 2.2 to provide a modern 64-bit environment.
+This preserves the project's 8-bit identity while allowing osbex 2.2 to provide a modern 64-bit environment.
 
 ## 23. Acceptance Criteria
 
@@ -394,13 +394,13 @@ The audio subsystem is ready when:
 5. Windows playback works through a host adapter.
 6. Headless CI works without an audio device.
 7. Snapshot/restore reproduces deterministic audio state.
-8. The device is exposed through the original MSTOS C++23 API.
+8. The device is exposed through the original osbex C++23 API.
 9. Automated tests cover register and timing behavior.
 10. No implementation source is copied from Atari, emulators, operating systems, or other third-party projects.
 
 ## 24. Related Documentation
 
-- `docs/CPM-8BIT_MSTOS-2.2_ALL-IN-ONE-SPEC.md`
+- `docs/CPM-8BIT_osbex-2.2_ALL-IN-ONE-SPEC.md`
 - `docs/IO_MAP.md`
 - `docs/MEMORY_MAP.md`
 - `docs/VIRTUAL_MACHINE_SPEC.md`

@@ -1,4 +1,4 @@
-// mstos/audio/audio_system.hpp — MSTOS 2.2 system sound event system
+// osbex/audio/audio_system.hpp — osbex 2.2 system sound event system
 //
 // Original CPM-8BIT implementation: manifest (TOML subset), .8snd parser,
 // event router with priorities + rate limits + bounded queue, retro backend
@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace mstos::audio
+namespace osbex::audio
 {
 
     // ---------- .8snd sequence (original text format) ----------
@@ -116,4 +116,4 @@ namespace mstos::audio
         uint64_t _last_play_ms[8] = {}; // rate limiting per bucket
     };
 
-} // namespace mstos::audio
+} // namespace osbex::audio

@@ -1,8 +1,8 @@
-// mstos/boot/post.cpp — real POST diagnostics (Phase 3)
+// osbex/boot/post.cpp — real POST diagnostics (Phase 3)
 #include "post.hpp"
 #include "emulator/hardware.hpp"
 
-namespace mstos::boot
+namespace osbex::boot
 {
 
     bool Post::check(emulator::VirtualDevice &dev, bool required)
@@ -25,7 +25,7 @@ namespace mstos::boot
         auto &disp = m.display();
 
         disp.clear();
-        disp.write("OSBORNE COMPUTER SYSTEM\nMSTOS 2.2\n\n");
+        disp.write("OSBORNE COMPUTER SYSTEM\nosbex 2.2\n\n");
 
         _results.clear();
         _fatal = false;
@@ -60,4 +60,4 @@ namespace mstos::boot
         disp.write("Diagnostics complete.\n");
     }
 
-} // namespace mstos::boot
+} // namespace osbex::boot

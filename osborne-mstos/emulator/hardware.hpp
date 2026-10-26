@@ -1,6 +1,6 @@
 // emulator/hardware.hpp — virtual Osborne hardware registry (Phase 1)
 //
-// All virtual devices live here. POST (mstos/boot) interrogates THIS
+// All virtual devices live here. POST (osbex/boot) interrogates THIS
 // configuration; nothing is hard-coded in the boot path.
 #pragma once
 #include <cstdint>

@@ -1,12 +1,12 @@
-# MSTOS 2.2 — Ubuntu/GNOME-Style Terminal and System Sounds
+# osbex 2.2 — Ubuntu/GNOME-Style Terminal and System Sounds
 
 Reference for desktop conventions: Ubuntu/GNOME *concepts only* — all
-implementation, assets and APIs are original CPM-8BIT/MSTOS work.
+implementation, assets and APIs are original CPM-8BIT/osbex work.
 
 ## Architecture
 
 ```
-MSTOS Desktop Shell (terminal, files, settings, monitors, launcher)
+osbex Desktop Shell (terminal, files, settings, monitors, launcher)
         ↓
 System Sound Service → Audio Event Router
         ├── Modern backend  (Linux/host audio)
@@ -58,7 +58,7 @@ END
 
 - `config/audio/system-sounds.toml` — versioned manifest
 - `assets/audio/**` — event assets (`.wav` modern, `.8snd` retro)
-- `mstos/audio/` — service, router, manifest, `.8snd` parser, retro backend
+- `osbex/audio/` — service, router, manifest, `.8snd` parser, retro backend
 - `tests/audio/` — manifest/router/parser/backend tests
 
 ## Acceptance
