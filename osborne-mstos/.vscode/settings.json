@@ -1,0 +1,12 @@
+{
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.cppStandard": "c++23",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/api/include"
+    ],
+    "files.associations": {
+        "*.hpp": "cpp",
+        "db.hpp": "cpp"
+    }
+}

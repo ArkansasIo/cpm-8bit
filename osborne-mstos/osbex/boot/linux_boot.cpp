@@ -24,6 +24,10 @@ namespace osbex::boot
         auto &disp = Machine::instance().display();
         auto &kbd = Machine::instance().keyboard();
 
+        // defensive: no choices / bad args -> behave as "boot the default"
+        if (kernels == nullptr || count <= 0)
+            return 0;
+
         disp.write("\n");
         disp.write("  GNU GRUB  version 2.12-osbex\n");
         disp.write("  +----------------------------------------------------------------------------+\n");
@@ -62,8 +66,14 @@ namespace osbex::boot
                 }
                 if (enter)
                     return selected;
-                if (c >= '1' && c <= char('0' + count))
+                if (c >= '1' && c <= '0' + count)
                     return c - '1';
+                if (c == 'e' || c == 'E' || c == 'c' || c == 'C')
+                {
+                    // GRUB-style: edit/commandline not supported in the virtual
+                    // machine — acknowledge instead of treating as a normal char
+                    disp.write("  (command not available in virtual GRUB)\n");
+                }
                 deadline = Clock::now() + std::chrono::seconds(timeout_seconds);
             }
             else
@@ -89,7 +99,7 @@ namespace osbex::boot
             {0.000043, "BIOS-provided physical RAM map (virtual, " + std::to_string(m.ram().megabytes()) + " MB)"},
             {0.000158, "CPU: " + m.cpu().model()},
             {0.000311, "smpboot: " + std::to_string(m.cpu().cores()) + " cores detected"},
-            {0.002046, "Memory: " + std::to_string(m.ram().megabytes() * 1024) + "K available"},
+            {0.002046, "Memory: " + std::to_string(uint64_t(m.ram().megabytes()) * 1024) + "K available"},
             {0.010233, "virtio_blk virtio0: [vda] " + std::to_string(m.disk().gigabytes()) + "GB virtual disk attached"},
             {0.020987, "Console: colour dummy device 80x25"},
             {0.051271, "clocksource: tsc (virtual PIT 8253 compatible) detected"},
@@ -119,10 +129,12 @@ namespace osbex::boot
     void loader_bar(const std::string &stage, int percent, int width)
     {
         auto &disp = Machine::instance().display();
+        if (width <= 0)
+            width = 40;
         percent = percent < 0 ? 0 : percent > 100 ? 100
                                                   : percent;
         const int filled = width * percent / 100;
-        std::string bar = "[" + std::string(filled, '#') + std::string(width - filled, ' ') + "]";
+        std::string bar = "[" + std::string(size_t(filled), '#') + std::string(size_t(width - filled), ' ') + "]";
         disp.write("\r " + bar + " " + std::to_string(percent) + "%  " + stage + "        ");
     }
 
@@ -160,13 +172,13 @@ namespace osbex::boot
     void load_screen(const std::string &title, int total_ticks)
     {
         auto &disp = Machine::instance().display();
-        const char spinner[] = "|/-\\";
+        if (total_ticks <= 0)
+            total_ticks = 1; // avoid divide-by-zero below
+        static constexpr const char spinner[] = "|/-\\";
         for (int i = 0; i <= total_ticks; ++i)
         {
             const int pct = i * 100 / total_ticks;
-            char buf[8];
-            std::snprintf(buf, sizeof buf, "%c", spinner[i % 4]);
-            disp.write("\r  " + std::string(buf) + " " + title + "  " + std::to_string(pct) + "%   ");
+            disp.write("\r  " + std::string(1, spinner[i % 4]) + " " + title + "  " + std::to_string(pct) + "%   ");
             pause_ms(45);
         }
         disp.write("\n\n");
