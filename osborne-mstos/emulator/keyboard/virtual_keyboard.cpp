@@ -2,6 +2,7 @@
 #include "../hardware.hpp"
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
+#include <cstdio>
 #include <windows.h>
 #include <conio.h>
 #endif
@@ -30,6 +31,28 @@ namespace emulator
     {
         is_enter = is_escape = false;
 #if defined(_WIN32)
+        // redirected input (pipe/file): _kbhit only sees the real console,
+        // so fall back to a blocking read from stdin when input is not a console.
+        static const bool input_is_console = []
+        {
+            HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
+            DWORD mode = 0;
+            return h != INVALID_HANDLE_VALUE && GetConsoleMode(h, &mode);
+        }();
+        if (!input_is_console)
+        {
+            const int ch = std::getchar();
+            if (ch == EOF)
+                return false;
+            if (ch == '\n' || ch == '\r')
+            {
+                is_enter = true;
+                c = '\r';
+                return true;
+            }
+            c = char(ch);
+            return true;
+        }
         if (!_kbhit())
             return false;
         const int ch = _getch();
