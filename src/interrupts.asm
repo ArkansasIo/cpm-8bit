@@ -6,6 +6,9 @@ SECTION .text
 GLOBAL _kstart
 EXTERN _kmain
 EXTERN kmain
+EXTERN __bss_start_seg
+EXTERN __bss_start_off
+EXTERN __bss_words
 
 ; underscore-decoration bridge: clang/LLVM emits undecorated ELF symbols,
 ; so map the asm's underscored externs onto the plain C++ names.
@@ -24,10 +27,27 @@ _kstart:
     xor ax, ax
     mov ds, ax
     mov es, ax
+    mov ax, 0xB800
+    mov fs, ax                  ; FS = VGA segment (DS/ES kept for kernel)
+    mov word [fs:0], 0x0F41     ; 'A' marker: proves _kstart started
+    xor ax, ax
     mov ss, ax
     mov sp, 0x7000              ; stack below kernel
-    sti
     cld
+    ; zero .bss — C++ statics (singletons, vtables, RamFs) need this.
+    ; Use a full 32-bit pointer: .bss can start above 64K in this layout.
+    mov ax, __bss_start_seg
+    mov es, ax                  ; ES:DI = __bss_start (16:16 far form)
+    mov di, __bss_start_off
+    mov cx, __bss_words
+    mov ax, 0
+    jcxz .bss_done
+    rep stosw
+.bss_done:
+    mov ax, 0xB800
+    mov fs, ax                  ; FS = VGA segment (DS/ES kept for kernel)
+    mov word [fs:0], 0x0F41     ; 'A' marker: proves _kstart started
+    sti
     call _kmain                  ; enter C++ world
 .halt:
     hlt

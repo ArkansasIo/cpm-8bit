@@ -90,7 +90,7 @@ namespace osbex::shell
             }
             else if (line == "ver" || line == "VER")
             {
-                disp.write("osbex 2.2 on Osborne (virtual) — heritage: Osborne 1, platform: Linux x86-64\n");
+                disp.write("osbex 2.2 on Osborne (virtual) — heritage: Osborne 1, platform: OS Prototype x86-64\n");
             }
             else if (line == "time" || line == "TIME")
             {

@@ -1,4 +1,4 @@
-# TinyOS-8 — C++23 Object-Oriented Kernel with MS-DOS 2.2 API (8-bit hardware)
+# OS Prototype 3.0.0 — C++23 Object-Oriented Kernel with MS-DOS 2.2 API (8-bit hardware)
 
 A small educational operating system inspired by the **Linux kernel layout**
 (boot → setup → kernel), written in **x86 Assembly** and **C++23** using an

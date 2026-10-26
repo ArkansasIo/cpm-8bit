@@ -24,12 +24,18 @@ namespace hw
         void probe_all()
         {
             for (u8 i = 0; i < _count; ++i)
+            {
+                asm volatile("movw $0x0F50, %%ax\n\tmovw %%ax, %%fs:(640)" ::: "ax", "memory"); // 'P'
                 _devices[i]->probe();
+            }
         }
         void init_all()
         {
             for (u8 i = 0; i < _count; ++i)
+            {
+                asm volatile("movw $0x0F49, %%ax\n\tmovw %%ax, %%fs:(800)" ::: "ax", "memory"); // 'I'
                 _devices[i]->init();
+            }
         }
         [[nodiscard]] u8 device_count() const { return _count; }
 

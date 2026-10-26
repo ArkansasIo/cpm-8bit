@@ -1,5 +1,5 @@
 // osbex/compatibility/cpm.cpp — CP/M/Z80 compatibility layer (Phase 8, isolated
-// from osbex core and Linux; runs legacy software against virtual drives)
+// from osbex core and OS Prototype; runs legacy software against virtual drives)
 #include "cpm.hpp"
 #include "emulator/hardware.hpp"
 #include <filesystem>

@@ -1,5 +1,7 @@
 // src/kernel.cpp — kernel object: init sequence, IRQ plumbing, tiny shell
 #include "kernel.hpp"
+#include "audio.hpp"
+#include "codec.hpp"
 #include "bus.hpp"
 #include "port8.hpp"
 
@@ -14,7 +16,7 @@ namespace kernel
     void Kernel::banner()
     {
         auto &vga = _bus.vga();
-        vga.write("TinyOS-8 — redesigned C++23 kernel / MS-DOS 2.2 API / 8-bit hardware\n",
+        vga.write("OS Prototype 3.0.0 — redesigned C++23 kernel / MS-DOS 2.2 API / 8-bit hardware\n",
                   hw::Vga::make_attr(hw::Vga::Yellow, hw::Vga::Black));
         vga.write("subsystems:\n", hw::Vga::make_attr(hw::Vga::LightCyan, hw::Vga::Black));
         char st[80];
@@ -130,6 +132,9 @@ namespace kernel
     {
         for (u8 i = 0; i < _sub_count; ++i)
             _subs[i]->start();
+        // audio subsystem comes up last so its first sound means "OS alive"
+        Speaker::instance().init();
+        Speaker::instance().sound_boot();
     }
 
     // simple itoa into a fixed buffer (8-bit era style)
@@ -191,7 +196,7 @@ namespace kernel
 
             if (line[0] == 'v' && line[1] == 'e' && line[2] == 'r')
             {
-                vga.write("TinyOS-8 kernel 0.1 — C++23 — DOS 2.2 API layer\n",
+                vga.write("OS Prototype 3.0.0 kernel 0.1 — C++23 — DOS 2.2 API layer\n",
                           hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
             }
             else if (line[0] == 't' && line[1] == 'i' && line[2] == 'm' && line[3] == 'e')
@@ -232,6 +237,50 @@ namespace kernel
                 (void)code;
                 vga.write("exit(0) via INT 21h AH=4Ch\n", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
             }
+            else if (line[0] == 's' && line[1] == 'o' && line[2] == 'u' && line[3] == 'n' && line[4] == 'd')
+            {
+                // SOUND <name> — play an event sound: boot loading read write save ok error
+                Speaker &spk = Speaker::instance();
+                if (line[6] == 'b') spk.sound_boot();
+                else if (line[6] == 'l') spk.sound_loading();
+                else if (line[6] == 'r') { spk.sound_read(); AudioCodec::encode_reading(); }
+                else if (line[6] == 'w') { spk.sound_write(); AudioCodec::encode_writing(); }
+                else if (line[6] == 's')
+                {
+                    // demo: encode a sample byte stream so the save "speaks" data
+                    static const u8 sample[4] = {0x0F, 0x42, 0x2A, 0x7F};
+                    spk.sound_save();
+                    AudioCodec::encode_saving(sample, 4);
+                }
+                else if (line[6] == 'o') spk.sound_ok();
+                else if (line[6] == 'e') spk.sound_error();
+                else vga.write("sound: boot loading read write save ok error\n",
+                               hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+            }
+            else if (line[0] == 't' && line[1] == 'o' && line[2] == 'n' && line[3] == 'e')
+            {
+                // TONE <byte-hex> — codec demo: encode byte to tones, decode back
+                u8 byte = 0xA7;
+                // parse two hex digits if given
+                if (len >= 8)
+                {
+                    const u8 hi = line[5] <= '9' ? u8(line[5] - '0') : u8(line[5] & 0x0F);
+                    const u8 lo = line[7] <= '9' ? u8(line[7] - '0') : u8(line[7] & 0x0F);
+                    byte = u8((hi << 4) | lo);
+                }
+                AudioCodec::play_byte(byte);
+                // decode both nibble tones back and display
+                char b[6];
+                vga.write("encoded 0x", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+                vga.write(u32_to_dec(byte, b), hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+                vga.write(" as tones ", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+                vga.write(u32_to_dec(AudioCodec::nibble_to_tone(u8(byte >> 4)), b),
+                          hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+                vga.write("/", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+                vga.write(u32_to_dec(AudioCodec::nibble_to_tone(u8(byte & 0x0F)), b),
+                          hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+                vga.write(" Hz\n", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+            }
             else if (line[0] == 's' && line[1] == 'u' && line[2] == 'b')
             {
                 // SUB — report subsystem status (redesigned kernel)
@@ -247,7 +296,7 @@ namespace kernel
             }
             else if (line[0] == 'h' && line[1] == 'e' && line[2] == 'l' && line[3] == 'p')
             {
-                vga.write("VER TIME TICK ECHO SUB HELP EXIT EXEC\n",
+                vga.write("VER TIME TICK ECHO SUB SOUND TONE HELP EXIT EXEC\n",
                           hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
             }
             else if (line[0] == 'e' && line[1] == 'x' && line[2] == 'e' && line[3] == 'c')
@@ -272,17 +321,22 @@ extern "C" void kmain()
     using namespace kernel;
     using namespace hw;
 
-    // early marker: prove we reached kmain
-    { volatile u16 *v = reinterpret_cast<volatile u16 *>(0xB8000); v[0] = 0x014B; v[1] = 0x014D; } // 'K','M'
+    // early marker: raw-asm write of 'A' to VGA (segment-safe, no C++ pointers)
+    asm volatile("movw $0xB800, %%ax\n\tmovw %%ax, %%es\n\tmovw $0x0F41, %%ax\n\tmovw %%ax, %%es:(0)" ::: "ax", "memory");
     Bus &bus = Bus::instance();
+    // marker E: kmain entered (ES-safe, FS segment)
+    asm volatile("movw $0xB800, %%ax\n\tmovw %%ax, %%fs\n\tmovw $0x0F45, %%ax\n\tmovw %%ax, %%fs:(1000)" ::: "ax", "memory");
     bus.register_device(bus.vga());
     bus.register_device(bus.pic());
     bus.register_device(bus.pit());
     bus.register_device(bus.keyboard());
 
     bus.vga().init();
+    // marker F: survived vga.init (clear wipes earlier markers)
+    asm volatile("movw $0x0F46, %%ax\n\tmovw %%ax, %%fs:(1200)" ::: "ax", "memory");
     bus.probe_all(); // probe devices (OOP virtual dispatch)
     bus.init_all();  // init: PIC remap, PIT 100Hz, keyboard
+    asm volatile("movw $0x0F44, %%ax\n\tmovw %%ax, %%fs:(480)" ::: "ax", "memory"); // 'D'
 
     Kernel::instance().boot(); // subsystems -> banner -> interrupts -> shell
 }

@@ -55,7 +55,21 @@ namespace hw
         u8 _x = 0, _y = 0;
         u8 _attr = make_attr(White, Black);
 
-        [[nodiscard]] static u16 *buffer() { return reinterpret_cast<u16 *>(MEM_TEXT * 16u); }
+        // 16-bit real mode: absolute pointer 0xB8000 can't be a 16-bit offset.
+        // Standard trick: 32-bit linear address in EAX — GAS emits the address-
+        // size prefix (67) so rm=000 in 32-bit addressing = [eax] = linear.
+        static inline void write_cell(u16 idx, u16 cell)
+        {
+            const u32 addr = 0xB8000u + u32(idx) * 2u;
+            asm volatile("movw %%dx, (%%eax)" : : "d"(cell), "a"(addr) : "memory");
+        }
+        [[nodiscard]] static inline u16 read_cell(u16 idx)
+        {
+            const u32 addr = 0xB8000u + u32(idx) * 2u;
+            u16 v;
+            asm volatile("movw (%%eax), %%dx" : "=d"(v) : "a"(addr) : "memory");
+            return v;
+        }
     };
 
 } // namespace hw

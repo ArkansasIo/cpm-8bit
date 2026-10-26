@@ -1,5 +1,5 @@
-// osbex/boot/linux_boot.cpp — Linux-style boot chain over the virtual Osborne
-#include "linux_boot.hpp"
+// osbex/boot/proto_boot.cpp — OS Prototype-style boot chain over the virtual Osborne
+#include "proto_boot.hpp"
 #include "emulator/hardware.hpp"
 #include <chrono>
 #include <cstdio>
@@ -14,7 +14,7 @@ namespace osbex::boot
     // On 8GB+ virtual RAM the host can retire the whole boot chain quickly,
     // so all artificial delays are scaled down (down to ~8% of nominal) and
     // the kernel console lines stream in larger batches. Goal: boot faster
-    // than Windows/Linux/macOS cold starts on equivalent hardware.
+    // than Windows/OS Prototype/macOS cold starts on equivalent hardware.
     struct BootProfile { int delay_scale; int console_batch; bool fast_grub; };
     static BootProfile boot_profile()
     {
@@ -48,7 +48,7 @@ namespace osbex::boot
             return 0;
 
         disp.write("\n");
-        disp.write("  GNU GRUB  version 2.12-osbex\n");
+        disp.write("  OSP BOOT  version 2.12-osbex\n");
         disp.write("  +----------------------------------------------------------------------------+\n");
         for (int i = 0; i < count; ++i)
             disp.write(std::string("  ") + (i == 0 ? "*" : " ") + " OSBEX 2.2, kernel " + kernels[i].version +
@@ -89,9 +89,9 @@ namespace osbex::boot
                     return c - '1';
                 if (c == 'e' || c == 'E' || c == 'c' || c == 'C')
                 {
-                    // GRUB-style: edit/commandline not supported in the virtual
+                    // OSP Boot Manager-style: edit/commandline not supported in the virtual
                     // machine — acknowledge instead of treating as a normal char
-                    disp.write("  (command not available in virtual GRUB)\n");
+                    disp.write("  (command not available in virtual OSP Boot Manager)\n");
                 }
                 deadline = Clock::now() + std::chrono::seconds(timeout_seconds);
             }
@@ -106,7 +106,7 @@ namespace osbex::boot
     {
         auto &disp = Machine::instance().display();
         auto &m = Machine::instance();
-        disp.write("\n[    0.000000] Linux version " + k.version + " (osbex@osborne) (gcc 16.2.0) #1 SMP PREEMPT_DYNAMIC\n");
+        disp.write("\n[    0.000000] OS Prototype version " + k.version + " (osbex@osborne) (gcc 16.2.0) #1 SMP PREEMPT_DYNAMIC\n");
         disp.write("[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-osbex root=/dev/c0 quiet splash\n");
 
         struct Line
@@ -210,7 +210,7 @@ namespace osbex::boot
             pause_ms(400);
     }
 
-    void boot_linux(const KernelChoice &k)
+    void boot_prototype(const KernelChoice &k)
     {
         kernel_console(k);
         load_initramfs(k);

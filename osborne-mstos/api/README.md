@@ -24,4 +24,4 @@ Categories: Files, Processes, Windows, Graphics, Input, Audio, Networking,
 Storage, System information, Timers, IPC.
 
 The implementation is provided by osbex services (`osbex/services`); nothing
-in `api/include` depends on the emulator, the Linux kernel, or a filesystem.
+in `api/include` depends on the emulator, the OS Prototype kernel, or a filesystem.

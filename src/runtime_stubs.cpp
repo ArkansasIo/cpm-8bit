@@ -1,4 +1,4 @@
-// src/runtime_stubs.cpp — freestanding C++ runtime support for TinyOS-8
+// src/runtime_stubs.cpp — freestanding C++ runtime support for OS Prototype 3.0.0
 #include <stddef.h>
 #include "types.hpp"
 
@@ -18,7 +18,7 @@ extern "C" void __cxa_pure_virtual()
 }
 
 // ---- freestanding allocator (bump allocator over static kernel heap) ----
-static unsigned char heap[64 * 1024];
+static unsigned char heap[16 * 1024]; // 16 KB heap: keeps total .bss under the 64 KiB real-mode segment limit
 static unsigned long heap_pos = 0;
 
 extern "C" void *sbrk_like(unsigned long size)

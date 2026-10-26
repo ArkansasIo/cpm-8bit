@@ -34,6 +34,7 @@ Start:
     mov dl, [BootDrive]
 
 .ReadLoop:
+    mov dl, [BootDrive]          ; int 13h clobbers DX — reload every pass
     ; count = min(Remaining, sectors left on this track = 19 - CL)
     mov al, 19
     sub al, cl
@@ -110,7 +111,7 @@ Print:
     popa
     ret
 
-MsgBoot db "TinyOS-8 booting...", 13, 10, 0
+MsgBoot db "OS Prototype 3.0.0 booting...", 13, 10, 0
 MsgOk   db "kernel loaded.", 13, 10, 0
 MsgErr  db "DISK ERROR!", 13, 10, 0
 BootDrive   db 0

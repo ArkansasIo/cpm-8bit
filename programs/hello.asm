@@ -11,4 +11,4 @@ start:
     mov al, 0                    ; 8-bit exit code
     int 21h
 
-msg db "Hello from MS-DOS 2.2 API on TinyOS-8!", 13, 10, '$'
+msg db "Hello from MS-DOS 2.2 API on OS Prototype 3.0.0!", 13, 10, '$'

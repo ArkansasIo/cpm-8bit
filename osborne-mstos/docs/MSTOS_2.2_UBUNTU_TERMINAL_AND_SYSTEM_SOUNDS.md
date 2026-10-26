@@ -9,7 +9,7 @@ implementation, assets and APIs are original CPM-8BIT/osbex work.
 osbex Desktop Shell (terminal, files, settings, monitors, launcher)
         ↓
 System Sound Service → Audio Event Router
-        ├── Modern backend  (Linux/host audio)
+        ├── Modern backend  (OS Prototype/host audio)
         └── Retro backend   (CPM8-AUDIO8, .8snd synthesis)
 ```
 
@@ -23,7 +23,7 @@ Stable string IDs, e.g. `sound.boot.power_on`, `sound.boot.post_fail`,
 
 ## Two asset modes per event
 
-- **modern** — PCM/WAV asset for the Linux/host backend.
+- **modern** — PCM/WAV asset for the OS Prototype/host backend.
 - **retro** — `.8snd` register sequence for CPM8-AUDIO8.
 
 ```

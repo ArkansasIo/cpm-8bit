@@ -15,7 +15,7 @@ namespace hw
         _attr = attr;
         const u16 cell = u16(u16(' ') | (u16(attr) << 8));
         for (u16 i = 0; i < COLS * ROWS; ++i)
-            buffer()[i] = cell;
+            write_cell(i, cell);
         _x = _y = 0;
         update_cursor();
     }
@@ -24,18 +24,19 @@ namespace hw
     {
         if (x >= COLS || y >= ROWS)
             return;
-        buffer()[u16(y) * COLS + x] = u16(u8(c)) | (u16(attr) << 8);
+        write_cell(u16(u16(y) * COLS + x), u16(u8(c)) | (u16(attr) << 8));
     }
 
     void Vga::scroll()
     {
         for (u8 y = 1; y < ROWS; ++y)
             for (u8 x = 0; x < COLS; ++x)
-                buffer()[u16(y - 1) * COLS + x] = buffer()[u16(y) * COLS + x];
+                write_cell(u16(u16(y - 1) * COLS + x),
+                           read_cell(u16(u16(y) * COLS + x)));
         // clear last line
         const u16 cell = u16(u16(' ') | (u16(_attr) << 8));
         for (u8 x = 0; x < COLS; ++x)
-            buffer()[u16(ROWS - 1) * COLS + x] = cell;
+            write_cell(u16(u16(ROWS - 1) * COLS + x), cell);
     }
 
     void Vga::write(const char *s, u8 attr)

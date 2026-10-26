@@ -3,7 +3,7 @@
 #include "hardware.hpp"
 #include "osbex/boot/post.hpp"
 #include "osbex/boot/boot_manager.hpp"
-#include "osbex/boot/linux_boot.hpp"
+#include "osbex/boot/proto_boot.hpp"
 #include "osbex/core/osbex.hpp"
 #include "osbex/recovery/recovery.hpp"
 #include "osbex/compatibility/cpm.hpp"
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    // Phase 5/6: GRUB menu → Linux kernel console → loader → load screen → OSBEX 2.2
+    // Phase 5/6: OSP Boot Manager menu → OS Prototype kernel console → loader → load screen → OSBEX 2.2
     using osbex::boot::KernelChoice;
     const KernelChoice kernels[] = {
         {"OSBEX 2.2 (default)", "6.8.0-osbex", false},
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
     const int pick = osbex::boot::boot_menu(kernels, 2, 5);
     if (pick < 0)
         return 0; // ESC in the boot menu = power off
-    osbex::boot::boot_linux(kernels[pick]);
+    osbex::boot::boot_prototype(kernels[pick]);
 
     osbex::core::osbex::instance().start();
     return 0;

@@ -18,7 +18,7 @@ namespace osbex::core
     public:
         static osbex &instance();
 
-        // Linux Kernel → Initramfs → osbex 2.2 — never returns
+        // OS Prototype Kernel → Initramfs → osbex 2.2 — never returns
         [[noreturn]] void start();
 
     private:

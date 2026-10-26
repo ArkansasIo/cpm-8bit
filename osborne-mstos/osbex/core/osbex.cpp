@@ -1,4 +1,4 @@
-// osbex/core/osbex.cpp — boot chain: Linux → initramfs → osbex services
+// osbex/core/osbex.cpp — boot chain: OS Prototype → initramfs → osbex services
 #include "osbex.hpp"
 #include "../shell/shell.hpp"
 #include "emulator/hardware.hpp"
@@ -30,14 +30,14 @@ namespace osbex::core
 
     void osbex::load_linux_kernel()
     {
-        // Phase 5: the 64-bit Linux kernel is responsible for scheduling, memory,
+        // Phase 5: the 64-bit OS Prototype kernel is responsible for scheduling, memory,
         // processes, storage, networking, drivers, security, syscalls.
         // Inside the Windows emulator the kernel image load is simulated; the
         // same stage sequence will drive a real image on hardware (M10).
         auto &disp = emulator::Machine::instance().display();
-        disp.write("\nLinux Kernel ...... LOADING\n");
+        disp.write("\nOS Prototype Kernel ...... LOADING\n");
         pause_ms(300);
-        disp.write("\rLinux Kernel ...... LOADED\n");
+        disp.write("\rOS Prototype Kernel ...... LOADED\n");
         stage_line("Initramfs");
     }
 

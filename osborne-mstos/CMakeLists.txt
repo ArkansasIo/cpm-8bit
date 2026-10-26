@@ -15,7 +15,7 @@ add_executable(osbex
     emulator/cpu/virtual_cpu.cpp
     osbex/boot/post.cpp
     osbex/boot/boot_manager.cpp
-    osbex/boot/linux_boot.cpp
+    osbex/boot/proto_boot.cpp
     osbex/core/osbex.cpp
     osbex/shell/shell.cpp
     osbex/compatibility/cpm.cpp

@@ -119,7 +119,7 @@ namespace kernel
         }
 
     private:
-        static constexpr u16 RamSize = 16384; // 16 KB ramdisk
+        static constexpr u16 RamSize = 4096; // 4 KB ramdisk (real-mode segment budget)
         u8 _ram[RamSize]{};
     };
 } // namespace kernel

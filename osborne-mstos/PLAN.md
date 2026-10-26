@@ -20,19 +20,19 @@ Menu: 1 Boot osbex 2.2 / 2 Recovery Mode / 3 Diagnostics / 4 CP/M Disk /
 5 Boot Device Selection. ESC return, ENTER select. Multiple boot images and
 virtual Osborne disk images supported.
 
-## Phase 5 — Linux
-64-bit Linux kernel underneath: scheduling, memory, processes, storage,
-networking, drivers, security, syscalls. Do not fork Linux without a concrete
+## Phase 5 — OS Prototype
+64-bit OS Prototype kernel underneath: scheduling, memory, processes, storage,
+networking, drivers, security, syscalls. Do not fork OS Prototype without a concrete
 technical requirement. First milestone: kernel boots inside the virtual
 machine (simulated until an image pipeline exists).
 
 ## Phase 6 — osbex 2.2
-Environment above Linux: init, system services, filesystem integration,
+Environment above OS Prototype: init, system services, filesystem integration,
 device services, CP/M compatibility, disk-image management, application
 management, GUI integration.
 
 ## Phase 7 ( Compatibility ) — CP/M & Osborne Compatibility
-Z80/CP/M compatibility layer, isolated from Linux and osbex core.
+Z80/CP/M compatibility layer, isolated from OS Prototype and osbex core.
 Virtual drives: A:/B: Osborne disk images, C: osbex filesystem, D: modern storage.
 
 ## Phase 8 — OS API
