@@ -14,16 +14,19 @@ namespace kernel
     void Kernel::banner()
     {
         auto &vga = _bus.vga();
-        vga.write("TinyOS-8 — C++23 kernel / MS-DOS 2.2 API / 8-bit hardware\n",
+        vga.write("TinyOS-8 — redesigned C++23 kernel / MS-DOS 2.2 API / 8-bit hardware\n",
                   hw::Vga::make_attr(hw::Vga::Yellow, hw::Vga::Black));
-        vga.write("devices probed:\n", hw::Vga::make_attr(hw::Vga::LightCyan, hw::Vga::Black));
-        for (u8 i = 0; i < _bus.device_count(); ++i)
+        vga.write("subsystems:\n", hw::Vga::make_attr(hw::Vga::LightCyan, hw::Vga::Black));
+        char st[80];
+        for (u8 i = 0; i < _sub_count; ++i)
         {
+            st[0] = 0;
+            _subs[i]->status(st, sizeof st);
             vga.write("  - ", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
-            vga.write(_bus.vga().name(), hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+            vga.write(st, hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
             vga.write("\n", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
         }
-        vga.write("INT 21h DOS API ready. Type commands at the prompt.\n\n",
+        vga.write("INT 21h DOS API ready. Type HELP for commands.\n\n",
                   hw::Vga::make_attr(hw::Vga::LightGreen, hw::Vga::Black));
     }
 
@@ -40,6 +43,93 @@ namespace kernel
         ivt[0x20 * 2 + 1] = 0;
         ivt[0x21 * 2]     = u16(gate & 0xFFFF);
         ivt[0x21 * 2 + 1] = 0;
+    }
+
+    // ---------------- redesigned: subsystem objects ----------------
+
+    // Ksched — cooperative scheduler subsystem
+    class Ksched final : public Subsystem
+    {
+    public:
+        const char *name() const override { return "sched"; }
+        bool init() override { return true; }
+        void start() override { Scheduler::instance().reap(); }
+        void status(char *out, u8 cap) override
+        {
+            char n[4];
+            u8 i = 0;
+            u8 v = Scheduler::instance().count();
+            if (!v) n[i++] = '0';
+            while (v) { n[i++] = char('0' + v % 10); v /= 10; }
+            u8 j = 0;
+            out[j++] = 's'; out[j++] = 'c'; out[j++] = 'h'; out[j++] = 'e'; out[j++] = 'd';
+            out[j++] = ':'; out[j++] = ' ';
+            while (i) out[j++] = n[--i];
+            const char *tail = " task(s), round-robin";
+            for (const char *p = tail; *p && j < cap - 1; ++p) out[j++] = *p;
+            out[j] = 0;
+        }
+    };
+
+    // Kvfs — VFS + ramfs subsystem
+    class Kvfs final : public Subsystem
+    {
+    public:
+        const char *name() const override { return "vfs"; }
+        bool init() override
+        {
+            return Vfs::instance().mount(_ramfs, 0);
+        }
+        void status(char *out, u8 cap) override
+        {
+            u8 j = 0;
+            const char *s = "vfs: ramfs mounted (16K)";
+            for (const char *p = s; *p && j < cap - 1; ++p) out[j++] = *p;
+            out[j] = 0;
+        }
+
+    private:
+        RamFs _ramfs;
+    };
+
+    // Kdos — DOS 2.2 API gate subsystem
+    class Kdos final : public Subsystem
+    {
+    public:
+        const char *name() const override { return "dos"; }
+        bool init() override { return true; }
+        void status(char *out, u8 cap) override
+        {
+            u8 j = 0;
+            const char *s = "dos: INT 21h gate armed";
+            for (const char *p = s; *p && j < cap - 1; ++p) out[j++] = *p;
+            out[j] = 0;
+        }
+    };
+
+    void Kernel::register_subsystems()
+    {
+        static Ksched ksched;
+        static Kvfs kvfs;
+        static Kdos kdos;
+        _subs[_sub_count++] = &ksched;
+        _subs[_sub_count++] = &kvfs;
+        _subs[_sub_count++] = &kdos;
+    }
+
+    bool Kernel::init_subsystems()
+    {
+        for (u8 i = 0; i < _sub_count; ++i)
+            if (!_subs[i]->init())
+                return false;
+        _init_ok = true;
+        return true;
+    }
+
+    void Kernel::start_subsystems()
+    {
+        for (u8 i = 0; i < _sub_count; ++i)
+            _subs[i]->start();
     }
 
     // simple itoa into a fixed buffer (8-bit era style)
@@ -142,6 +232,24 @@ namespace kernel
                 (void)code;
                 vga.write("exit(0) via INT 21h AH=4Ch\n", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
             }
+            else if (line[0] == 's' && line[1] == 'u' && line[2] == 'b')
+            {
+                // SUB — report subsystem status (redesigned kernel)
+                char st[80];
+                for (u8 i = 0; i < _sub_count; ++i)
+                {
+                    st[0] = 0;
+                    _subs[i]->status(st, sizeof st);
+                    vga.write("  ", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+                    vga.write(st, hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+                    vga.write("\n", hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+                }
+            }
+            else if (line[0] == 'h' && line[1] == 'e' && line[2] == 'l' && line[3] == 'p')
+            {
+                vga.write("VER TIME TICK ECHO SUB HELP EXIT EXEC\n",
+                          hw::Vga::make_attr(hw::Vga::LightGray, hw::Vga::Black));
+            }
             else if (line[0] == 'e' && line[1] == 'x' && line[2] == 'e' && line[3] == 'c')
             {
                 // EXEC the demo program via INT 21h AH=01h sample (see programs/HELLO.ASM)
@@ -164,6 +272,8 @@ extern "C" void kmain()
     using namespace kernel;
     using namespace hw;
 
+    // early marker: prove we reached kmain
+    { volatile u16 *v = reinterpret_cast<volatile u16 *>(0xB8000); v[0] = 0x014B; v[1] = 0x014D; } // 'K','M'
     Bus &bus = Bus::instance();
     bus.register_device(bus.vga());
     bus.register_device(bus.pic());
@@ -174,15 +284,24 @@ extern "C" void kmain()
     bus.probe_all(); // probe devices (OOP virtual dispatch)
     bus.init_all();  // init: PIC remap, PIT 100Hz, keyboard
 
-    Kernel::instance().boot(); // banner → interrupts → shell, never returns
+    Kernel::instance().boot(); // subsystems -> banner -> interrupts -> shell
 }
 
 namespace kernel
 {
     [[noreturn]] void Kernel::boot()
     {
+        register_subsystems();
+        if (!init_subsystems())
+        {
+            // kernel panic path (16-bit analogue of Linux's panic())
+            _bus.vga().write("PANIC: subsystem init failed\n",
+                             hw::Vga::make_attr(hw::Vga::Red, hw::Vga::Black));
+            for (;;) asm volatile("hlt");
+        }
         banner();
         remap_interrupts();
+        start_subsystems();
         shell(); // never returns
         for (;;) asm volatile("hlt"); // unreachable, satisfies noreturn
     }
