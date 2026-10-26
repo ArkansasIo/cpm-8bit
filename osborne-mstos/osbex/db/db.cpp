@@ -27,13 +27,13 @@ namespace osbex::db
     static std::string lower(std::string s)
     {
         for (char &c : s)
-            c = char(std::tolower(unsigned char(c)));
+            c = char(std::tolower(static_cast<unsigned char>(c)));
         return s;
     }
     static std::string upper(std::string s)
     {
         for (char &c : s)
-            c = char(std::toupper(unsigned char(c)));
+            c = char(std::toupper(static_cast<unsigned char>(c)));
         return s;
     }
     static std::vector<std::string> split_ws(const std::string &s)
@@ -165,16 +165,16 @@ namespace osbex::db
         int tok = 0;
         while (tok < 2 && pos < v.size())
         {
-            while (pos < v.size() && std::isspace(unsigned char(v[pos])))
+            while (pos < v.size() && std::isspace(static_cast<unsigned char>(v[pos])))
                 ++pos;
-            while (pos < v.size() && !std::isspace(unsigned char(v[pos])))
+            while (pos < v.size() && !std::isspace(static_cast<unsigned char>(v[pos])))
                 ++pos;
             ++tok;
         }
         if (pos < v.size())
         {
             v = v.substr(pos);
-            while (!v.empty() && std::isspace(unsigned char(v.back())))
+            while (!v.empty() && std::isspace(static_cast<unsigned char>(v.back())))
                 v.pop_back();
             if (v.size() >= 2 && (v.front() == '\'' || v.front() == '"') && v.back() == v.front())
                 v = v.substr(1, v.size() - 2);
@@ -424,9 +424,9 @@ namespace osbex::db
             if (dash != std::string::npos)
                 stmt = stmt.substr(0, dash);
             std::string work = stmt;
-            while (!work.empty() && std::isspace(unsigned char(work.front())))
+            while (!work.empty() && std::isspace(static_cast<unsigned char>(work.front())))
                 work.erase(0, 1);
-            while (!work.empty() && std::isspace(unsigned char(work.back())))
+            while (!work.empty() && std::isspace(static_cast<unsigned char>(work.back())))
                 work.pop_back();
             if (work.empty())
                 continue;
@@ -442,9 +442,9 @@ namespace osbex::db
                     continue;
                 }
                 std::string tname = work.substr(12, p1 - 12);
-                while (!tname.empty() && std::isspace(unsigned char(tname.back())))
+                while (!tname.empty() && std::isspace(static_cast<unsigned char>(tname.back())))
                     tname.pop_back();
-                while (!tname.empty() && std::isspace(unsigned char(tname.front())))
+                while (!tname.empty() && std::isspace(static_cast<unsigned char>(tname.front())))
                     tname.erase(0, 1);
                 std::vector<Column> cols;
                 std::istringstream cols_ss(work.substr(p1 + 1, p2 - p1 - 1));
@@ -481,9 +481,9 @@ namespace osbex::db
                     continue;
                 }
                 std::string tname = work.substr(11, vp - 11);
-                while (!tname.empty() && std::isspace(unsigned char(tname.back())))
+                while (!tname.empty() && std::isspace(static_cast<unsigned char>(tname.back())))
                     tname.pop_back();
-                while (!tname.empty() && std::isspace(unsigned char(tname.front())))
+                while (!tname.empty() && std::isspace(static_cast<unsigned char>(tname.front())))
                     tname.erase(0, 1);
                 Table *t = find(tname);
                 if (!t)
@@ -502,9 +502,9 @@ namespace osbex::db
                 std::string v;
                 while (std::getline(vss, v, ','))
                 {
-                    while (!v.empty() && std::isspace(unsigned char(v.front())))
+                    while (!v.empty() && std::isspace(static_cast<unsigned char>(v.front())))
                         v.erase(0, 1);
-                    while (!v.empty() && std::isspace(unsigned char(v.back())))
+                    while (!v.empty() && std::isspace(static_cast<unsigned char>(v.back())))
                         v.pop_back();
                     if (v.size() >= 2 && (v.front() == '\'' || v.front() == '"') && v.back() == v.front())
                         v = v.substr(1, v.size() - 2);
@@ -528,17 +528,17 @@ namespace osbex::db
                     continue;
                 }
                 std::string rest = work.substr(from + 4);
-                while (!rest.empty() && std::isspace(unsigned char(rest.front())))
+                while (!rest.empty() && std::isspace(static_cast<unsigned char>(rest.front())))
                     rest.erase(0, 1);
                 std::string tname = rest, where;
                 const size_t wp = lower(rest).find("where");
                 if (wp != std::string::npos)
                 {
                     tname = rest.substr(0, wp);
-                    while (!tname.empty() && std::isspace(unsigned char(tname.back())))
+                    while (!tname.empty() && std::isspace(static_cast<unsigned char>(tname.back())))
                         tname.pop_back();
                     where = rest.substr(wp + 5);
-                    while (!where.empty() && std::isspace(unsigned char(where.front())))
+                    while (!where.empty() && std::isspace(static_cast<unsigned char>(where.front())))
                         where.erase(0, 1);
                 }
                 std::string err;
@@ -573,9 +573,9 @@ namespace osbex::db
                     where = tname.substr(wp + 5);
                     tname = tname.substr(0, wp);
                 }
-                while (!tname.empty() && std::isspace(unsigned char(tname.back())))
+                while (!tname.empty() && std::isspace(static_cast<unsigned char>(tname.back())))
                     tname.pop_back();
-                while (!tname.empty() && std::isspace(unsigned char(tname.front())))
+                while (!tname.empty() && std::isspace(static_cast<unsigned char>(tname.front())))
                     tname.erase(0, 1);
                 Table *t = find(tname);
                 if (!t)
@@ -590,7 +590,7 @@ namespace osbex::db
             else if (u.rfind("DROP TABLE", 0) == 0)
             {
                 std::string tname = work.substr(10);
-                while (!tname.empty() && std::isspace(unsigned char(tname.front())))
+                while (!tname.empty() && std::isspace(static_cast<unsigned char>(tname.front())))
                     tname.erase(0, 1);
                 out.push_back(drop_table(tname) ? "OK: dropped " + tname : "ERR: no such table: " + tname);
             }

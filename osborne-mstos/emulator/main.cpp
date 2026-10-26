@@ -39,6 +39,12 @@ static HardwareConfig parse_args(int argc, char **argv)
             c.ram_mb = std::strtoul(argv[++i], nullptr, 10);
         else if (std::strcmp(argv[i], "--disk") == 0 && i + 1 < argc)
             c.disk_gb = std::strtoul(argv[++i], nullptr, 10);
+        else if (std::strcmp(argv[i], "--color") == 0 && i + 1 < argc)
+        {
+            const int bits = std::atoi(argv[++i]);
+            // only 16, 32 or 64 are valid
+            c.color_depth = (bits == 16 || bits == 32 || bits == 64) ? uint8_t(bits) : uint8_t(16);
+        }
         else if (std::strcmp(argv[i], "--nonet") == 0)
             c.network = false;
         else if (std::strcmp(argv[i], "--state") == 0 && i + 1 < argc)

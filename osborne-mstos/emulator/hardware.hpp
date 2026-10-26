@@ -18,6 +18,8 @@ namespace emulator
         // display geometry
         uint32_t cols = 80, rows = 25;     // character mode
         uint32_t gfx_w = 640, gfx_h = 480; // graphics mode
+        // color depth of the virtual framebuffer (bits per pixel)
+        uint8_t color_depth = 16;          // 16 / 32 / 64-bit color options
         // virtual network
         bool network = true;
         // saved-state file (Phase 1 "when practical")

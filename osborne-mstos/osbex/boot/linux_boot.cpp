@@ -10,7 +10,26 @@ namespace osbex::boot
     using emulator::Machine;
     using Clock = std::chrono::steady_clock;
 
-    static void pause_ms(int ms) { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); }
+    // ---- performance model: boot pacing scales with the virtual machine ----
+    // On 8GB+ virtual RAM the host can retire the whole boot chain quickly,
+    // so all artificial delays are scaled down (down to ~8% of nominal) and
+    // the kernel console lines stream in larger batches. Goal: boot faster
+    // than Windows/Linux/macOS cold starts on equivalent hardware.
+    struct BootProfile { int delay_scale; int console_batch; bool fast_grub; };
+    static BootProfile boot_profile()
+    {
+        const uint32_t mb = Machine::instance().ram().megabytes();
+        if (mb >= 8192)  return {8, 6, true};   // 8GB+: fastest
+        if (mb >= 4096)  return {25, 3, false}; // 4GB+: fast
+        if (mb >= 2048)  return {50, 2, false}; // 2GB: moderate
+        return {100, 1, false};                 // <2GB: nominal (era-authentic)
+    }
+    static int scaled(int ms)
+    {
+        return ms * boot_profile().delay_scale / 100;
+    }
+
+    static void pause_ms(int ms) { std::this_thread::sleep_for(std::chrono::milliseconds(scaled(ms))); }
 
     static std::string dmesg_ts(double seconds)
     {
@@ -114,13 +133,15 @@ namespace osbex::boot
             {0.600517, "Run /sbin/init as init process"},
         };
         int shown = 0;
+        const int batch = boot_profile().console_batch;
         for (const Line &L : all)
         {
             if (shown >= lines)
                 break;
-            disp.write(dmesg_ts(L.t) + " " + L.text + "\n");
+            // batch lines without per-line delay on fast machines
+            for (int b = 0; b < batch && shown < lines; ++b, ++shown)
+                disp.write(dmesg_ts(all[shown].t) + " " + all[shown].text + "\n");
             pause_ms(60);
-            ++shown;
         }
         if (k.recovery)
             disp.write(dmesg_ts(0.71) + " recovery: initramfs (rescue) selected by user\n");
@@ -183,7 +204,10 @@ namespace osbex::boot
         }
         disp.write("\n\n");
         disp.write("  Welcome to OSBEX 2.2\n\n");
-        pause_ms(400);
+        // 8GB+ fast profile: skip the welcome splash pause — shell is the goal
+        const bool fast = boot_profile().fast_grub;
+        if (!fast)
+            pause_ms(400);
     }
 
     void boot_linux(const KernelChoice &k)

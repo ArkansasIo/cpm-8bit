@@ -3,9 +3,12 @@
 #include "emulator/hardware.hpp"
 #include "osbex/compatibility/cpm.hpp"
 #include "osbex/core/osbex.hpp"
+#include "osbex/db/db.hpp"
 #include <chrono>
 #include <cstring>
 #include <filesystem>
+#include <fstream>
+#include <sstream>
 
 namespace osbex::shell
 {
@@ -76,6 +79,11 @@ namespace osbex::shell
                     "DIR      - list current directory (C:)\n"
                     "SYSINFO  - virtual hardware summary\n"
                     "CPM      - CP/M compatibility: A: B: images, C: osbex, D: modern\n"
+                    "DB       - list tables in the built-in database\n"
+                    "SQL      - SQL <statement>; run against the built-in DB\n"
+                    "SQLFILE  - load and run a .sql file (MySQL-compatible)\n"
+                    "CONFIG   - show OS configuration (stored in the DB)\n"
+                    "CONFIG SET <key> <value> - write a config key\n"
                     "SAVE     - save virtual machine state\n"
                     "LOAD     - load virtual machine state\n"
                     "EXIT     - power off\n");
@@ -105,6 +113,61 @@ namespace osbex::shell
             else if (line.rfind("cpm", 0) == 0)
             {
                 compat::command(line);
+            }
+            else if (line == "db" || line == "DB")
+            {
+                // database status: tables in the built-in engine
+                auto &eng = osbex::db::Engine::instance();
+                const auto tables = eng.table_names();
+                if (tables.empty())
+                    disp.write("No tables. Use SQL <statement>; or SQLFILE bootstrap.sql\n");
+                else
+                    for (const auto &t : tables)
+                    {
+                        std::string err;
+                        const std::string dump = eng.dump_table(t, err);
+                        disp.write(dump);
+                    }
+            }
+            else if (line.rfind("sql ", 0) == 0 || line.rfind("SQL ", 0) == 0)
+            {
+                // SQL <statement>; — run against the built-in engine
+                std::string stmt = line.substr(4);
+                for (const auto &out : osbex::db::Engine::instance().execute_script(stmt))
+                    disp.write(out + "\n");
+            }
+            else if (line.rfind("sqlfile ", 0) == 0 || line.rfind("SQLFILE ", 0) == 0)
+            {
+                std::string path = line.substr(8);
+                while (!path.empty() && path.back() == ' ') path.pop_back();
+                std::ifstream f(path, std::ios::binary);
+                if (!f) { disp.write("cannot open: " + path + "\n"); }
+                else
+                {
+                    std::ostringstream ss; ss << f.rdbuf();
+                    for (const auto &out : osbex::db::Engine::instance().execute_script(ss.str()))
+                        disp.write(out + "\n");
+                }
+            }
+            else if (line == "config" || line == "CONFIG")
+            {
+                // OS configuration stored in the built-in DB
+                for (const auto &kv : osbex::db::Config::instance().all())
+                    disp.write("  " + kv.first + " = " + kv.second + "\n");
+                if (osbex::db::Config::instance().all().empty())
+                    disp.write("(no config keys — CONFIG SET <key> <value> to add)\n");
+            }
+            else if (line.rfind("config set ", 0) == 0 || line.rfind("CONFIG SET ", 0) == 0)
+            {
+                std::string rest = line.substr(11);
+                const size_t sp = rest.find(' ');
+                if (sp == std::string::npos)
+                    disp.write("usage: CONFIG SET <key> <value>\n");
+                else
+                {
+                    osbex::db::Config::instance().set(rest.substr(0, sp), rest.substr(sp + 1));
+                    disp.write("saved.\n");
+                }
             }
             else if (line == "save" || line == "SAVE")
             {
