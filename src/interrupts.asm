@@ -7,6 +7,12 @@ GLOBAL _kstart
 EXTERN _kmain
 EXTERN kmain
 
+; underscore-decoration bridge: clang/LLVM emits undecorated ELF symbols,
+; so map the asm's underscored externs onto the plain C++ names.
+%define _kmain kmain
+%define _hw_irq_handler hw_irq_handler
+%define _dos_int21_handler dos_int21_handler
+
 ; C++23 freestanding helpers
 EXTERN __cxa_pure_virtual
 
@@ -31,7 +37,9 @@ _kstart:
 ; wrapper: call C++ interrupt handler with a stub frame
 ; -----------------------------------------------
 GLOBAL _irq_stub
+GLOBAL irq_stub
 EXTERN _hw_irq_handler
+irq_stub:
 _irq_stub:
     pusha
     push ds
@@ -50,7 +58,9 @@ _irq_stub:
 ; int 21h gate: DOS API call router (called by user programs)
 ; -----------------------------------------------
 GLOBAL _dos_api_gate
+GLOBAL dos_api_gate
 EXTERN _dos_int21_handler
+dos_api_gate:
 _dos_api_gate:
     pusha
     push ds

@@ -8,6 +8,7 @@ SECTIONS
     . = 0x7E00;
 
     .text : ALIGN(4) {
+        src/interrupts.o(.text)   /* _kstart must be at 0x7E00 (boot jump target) */
         *(.text._kstart)
         *(.text*)
     }

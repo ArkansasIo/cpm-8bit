@@ -1,6 +1,8 @@
 // src/runtime_stubs.cpp — freestanding C++ runtime support for TinyOS-8
-#include <cstddef>
+#include <stddef.h>
 #include "types.hpp"
+
+using size_t_ = decltype(sizeof(0));
 
 // Single-threaded kernel: the ABI guard functions are trivially satisfied.
 extern "C" int __cxa_guard_acquire(long long *) { return 1; }
@@ -28,15 +30,15 @@ extern "C" void *sbrk_like(unsigned long size)
     return p;
 }
 
-void *operator new(std::size_t size)
+void *operator new(size_t_ size)
 {
     return sbrk_like(size);
 }
-void *operator new[](std::size_t size)
+void *operator new[](size_t_ size)
 {
     return sbrk_like(size);
 }
 void operator delete(void *) noexcept {}
 void operator delete[](void *) noexcept {}
-void operator delete(void *, std::size_t) noexcept {}
-void operator delete[](void *, std::size_t) noexcept {}
+void operator delete(void *, size_t_) noexcept {}
+void operator delete[](void *, size_t_) noexcept {}

@@ -1,12 +1,11 @@
 // include/types.hpp — 8-bit era fundamental types
 #pragma once
-#include <cstdint>
-#include <cstddef>
+#include <stddef.h>
 
-using u8  = std::uint8_t;
-using s8  = std::int8_t;
-using u16 = std::uint16_t;
-using u32 = std::uint32_t;
+using u8  = __UINT8_TYPE__;
+using s8  = __INT8_TYPE__;
+using u16 = __UINT16_TYPE__;
+using u32 = __UINT32_TYPE__;
 using addr_t = u16;          // real-mode segment:offset world
 
 #define UNUSED [[maybe_unused]]
