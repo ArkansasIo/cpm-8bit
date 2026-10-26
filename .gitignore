@@ -9,3 +9,5 @@ src/*.o
 kernel.bin
 kernel_pe*.tmp
 src/hello*.*
+!output/
+!output/**
