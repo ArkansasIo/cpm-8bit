@@ -28,8 +28,7 @@ _kstart:
     mov ds, ax
     mov es, ax
     mov ax, 0xB800
-    mov fs, ax                  ; FS = VGA segment (DS/ES kept for kernel)
-    mov word [fs:0], 0x0F41     ; 'A' marker: proves _kstart started
+    mov fs, ax                  ; FS = VGA segment (kept for kernel debug)
     xor ax, ax
     mov ss, ax
     mov sp, 0x7000              ; stack below kernel

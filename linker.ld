@@ -17,7 +17,10 @@ SECTIONS
         *(.bss*) *(COMMON)
         __bss_end = .;
     }
-    __bss_start_off  = __bss_start & 0xFFFF;
+    /* real-mode segment:offset decomposition of the .bss start.
+       ALIGN(16) guarantees off <= 0xF, so one segment covers everything
+       up to 64 KiB of bss. */
+    __bss_start_off  = __bss_start & 0xF;
     __bss_start_seg  = (__bss_start >> 4) & 0xFFFF;
     __bss_words      = (__bss_end - __bss_start) >> 1;
     /DISCARD/ : { *(.eh_frame*) *(.comment*) *(.note*) *(.gcc_except_table*) }

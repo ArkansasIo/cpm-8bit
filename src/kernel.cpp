@@ -321,22 +321,15 @@ extern "C" void kmain()
     using namespace kernel;
     using namespace hw;
 
-    // early marker: raw-asm write of 'A' to VGA (segment-safe, no C++ pointers)
-    asm volatile("movw $0xB800, %%ax\n\tmovw %%ax, %%es\n\tmovw $0x0F41, %%ax\n\tmovw %%ax, %%es:(0)" ::: "ax", "memory");
     Bus &bus = Bus::instance();
-    // marker E: kmain entered (ES-safe, FS segment)
-    asm volatile("movw $0xB800, %%ax\n\tmovw %%ax, %%fs\n\tmovw $0x0F45, %%ax\n\tmovw %%ax, %%fs:(1000)" ::: "ax", "memory");
     bus.register_device(bus.vga());
     bus.register_device(bus.pic());
     bus.register_device(bus.pit());
     bus.register_device(bus.keyboard());
 
     bus.vga().init();
-    // marker F: survived vga.init (clear wipes earlier markers)
-    asm volatile("movw $0x0F46, %%ax\n\tmovw %%ax, %%fs:(1200)" ::: "ax", "memory");
     bus.probe_all(); // probe devices (OOP virtual dispatch)
     bus.init_all();  // init: PIC remap, PIT 100Hz, keyboard
-    asm volatile("movw $0x0F44, %%ax\n\tmovw %%ax, %%fs:(480)" ::: "ax", "memory"); // 'D'
 
     Kernel::instance().boot(); // subsystems -> banner -> interrupts -> shell
 }

@@ -33,6 +33,9 @@ namespace kernel
     public:
         static Kernel &instance()
         {
+            // the zeroing vector stores are the kernel's static-object init; they
+            // compile to SSE (movups) which #UDs in real mode — guarded at the
+            // command line with -mno-sse/-mno-mmx instead of changing code here.
             static Kernel k;
             return k;
         }
